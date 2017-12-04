@@ -1,0 +1,58 @@
+table, td {
+  border: 1px solid black;
+  font: 15px arial, sans-serif;
+  border-collapse: collapse;
+  padding: 0;
+}
+
+th {
+  background: Gainsboro;
+}
+
+tr {
+  white-space:nowrap;
+  padding: 0;
+}
+
+input {
+  font: 15px arial, sans-serif;
+  color: midnightblue;
+  font-style: bold;
+  border: none;
+}
+
+input.right {
+  text-align: right;
+  padding: 0;
+}
+
+p.output {
+  text-align: right;
+  padding: 0;
+  border-collapse: collapse;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+button {
+    background-color: #39CCCC; /* Green */
+    border: none;
+    color: white;
+    padding: 5px 9px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin: 2px 1px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+textarea:focus, input:focus{
+    outline-color: #39CCCC;
+}

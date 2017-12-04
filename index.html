@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="index.css" media="screen" />
+    <title>Pharma LRP</title>
+  </head>
+  <body>
+    <hr>
+    <h3>
+      Company Information
+    </h3>
+    <table id="companyInfo">
+      <tr>
+        <td>Starting Year</td>
+        <td> <input id="startYear" type="number" value="2017"> </td>
+      </tr>
+      <tr>
+        <td>Starting Cash</td>
+        <td class="right"> <input id="startCash" type="number" class="right"></td>
+      </tr>
+    </table>
+    <br>
+    <button onclick="yearDisplay();cashStartDisplay()">Submit</button>
+    <br>
+    <hr>
+    <h3>
+      Development Phases
+    </h3>
+    <table id="preclinicalPhases">
+      <tr>
+        <th col>Preclinical Phase</th>
+        <th col>Cost / period</th>
+      </tr>
+      <tr>
+        <td>Discovery</td>
+        <td> <input class="right" id="discoveryCost" type="number"> </td>
+      </tr>     <tr>
+        <td>Preclinical</td>
+        <td> <input class="right"  id="preclinicalCost" type="number"> </td>
+      </tr>
+    </table>
+    <br>
+    <table id="clinicalPhases">
+      <tr>
+        <th col>Clinical Phase</th>
+        <th col>Patients</th>
+        <th col>Cost / patient</th>
+        <th col>Total Trial Cost</th>
+      </tr>
+      <tr>
+        <td>Phase 1</td>
+        <td> <input class="right "id="phase1Patients" type="number"> </td>
+        <td> <input class="right "id="phase1PatientCost" type="number"> </td>
+        <td> <p id="phase1Total" class="output"> </td>
+      </tr>   
+      <tr>
+        <td>Phase 2</td>
+        <td> <input class="right "id="phase2Patients" type="number"> </td>
+        <td> <input class="right "id="phase2PatientCost" type="number"> </td>
+        <td> <p id="phase2Total" class="output"> </td>
+      </tr>   
+      <tr>
+        <td>Phase 3</td>
+        <td> <input class="right "id="phase3Patients" type="number"> </td>
+        <td> <input class="right "id="phase3PatientCost" type="number"> </td>
+        <td> <p id="phase3Total" class="output"> </td>
+      </tr>   
+   </table>
+    <br>
+    <button onclick="developmentPhases()">Submit</button>
+    <br>
+    <hr>
+    <h3>
+      Programs
+    </h3>
+    <table id="programs">
+      <tr>
+        <th col>Program Name</th>
+        <th class="blank"></th>
+      </tr>
+      <tr>
+        <td> <input id="newProgram1" type="text" placeholder="Program Name"></td>
+      </tr>
+      <tr>
+        <td> <input id="newProgram2" type="text" placeholder="Program Name"></td>
+      </tr>
+      <tr>
+        <td> <input id="newProgram3" type="text" placeholder="Program Name"></td>
+      </tr>   
+    </table>
+    <br>
+    <button onclick="addItem('programs',programs)">Add</button>
+    <button onclick="deleteItem('programs')">Delete</button>
+    <br>
+    <hr>
+    <h3>
+      Program Development Timeline
+    </h3>
+    <table id="programTimeline">
+      <tr>
+      </tr>
+    </table>
+    <br>
+    
+    <hr>
+    <h3>
+      Full Time Employees
+    </h3>
+    <p>Annual merit increase assumption (%):<p><input id="meritIncrease" type="percent">
+    <table>
+      <tr>
+        <th col>Department</th>
+        <th col>Fully-loaded cost</th>
+        <th col class="yearOneLabel"> </th>
+        <th col id="yearTwoLabel" class="FTE"> </th>
+        <th col id="yearThreeLabel" class="FTE"> </th>
+        <th col id="yearFourLabel" class="FTE"> </th>
+        <th col id="yearFiveLabel" class="FTE"> </th>
+     </tr>
+     <tr>
+        <td> Research and Development </td>
+        <td> <input type="number"> </td>
+        <td> <input type="number"> </td>
+        <td> <input type="number"> </td>
+        <td> <input type="number"> </td>
+        <td> <input type="number"> </td>
+        <td> <input type="number"> </td>
+     </tr>
+     <tr>
+        <td> General and Admin </td>
+        <td> <input type="number"> </td>
+        <td> <input type="number"> </td>
+        <td> <input type="number"> </td>
+        <td> <input type="number"> </td>
+        <td> <input type="number"> </td>
+        <td> <input type="number"> </td>
+     </tr>
+    </table>
+    <br>
+    <hr>
+    <h3>
+      Other Expenses
+    </h3>
+    <table>
+      <tr>
+        <th col>Item</th>
+        <th col class="yearOneLabel"> </th>
+        <th col id="yearTwoLabel" class="otherExpense"> </th>
+        <th col id="yearThreeLabel" class="otherExpense"> </th>
+        <th col id="yearFourLabel" class="otherExpense"> </th>
+        <th col id="yearFiveLabel" class="otherExpense"> </th>
+      </tr>
+      <tr>
+        <td> <input type="text" placeholder="CapEx"></td>
+        <td> <input type="number"> </td>
+        <td> <input type="number"> </td>
+        <td> <input type="number"> </td>
+        <td> <input type="number"> </td>
+        <td> <input type="number"> </td>
+      </tr>
+      <tr>
+        <td> <input type="text" placeholder="Corporate Expenses"></td>
+        <td> <input type="number"> </td>
+        <td> <input type="number"> </td>
+        <td> <input type="number"> </td>
+        <td> <input type="number"> </td>
+        <td> <input type="number"> </td>
+      </tr>
+    </table>
+    <br> 
+    <hr>
+    <h3>
+      Financial Results
+    </h3>
+    <table>
+      <tr>
+        <th col id="resultItems">Item </th>
+        <th col id="yearOneLabel"> </th>
+        <th col id="yearTwoLabel"> </th>
+        <th col id="yearThreeLabel"> </th>
+        <th col id="yearFourLabel"> </th>
+        <th col id="yearFiveLabel"> </th>
+      </tr>
+      <tr>
+        <td> Beginning Cash </td>
+        <td> <p id="begCash" type="number" class="output"> </td>
+        <td id="yearTwoBegCash" type="number"</td>
+        <td id="yearThreeBegCash" type="number"</td>
+        <td id="yearFourBegCash" type="number"</td>
+        <td id="yearFiveBegCash" type="number"</td>
+      </tr>
+      <tr>
+        <td> Revenue </td>
+        <td> <input id="yearOneRev" type="number"></td>
+        <td> <input id="yearTwoRev" type="number"</td>
+        <td> <input id="yearThreeRev" type="number"></td>
+        <td> <input id="yearFourRev" type="number"</td>
+        <td> <input id="yearFiveRev" type="number"></td>
+      </tr>
+      <tr>
+        <td> Expenses </td>
+        <td> <input id="yearOneExp" type="number"></td>
+        <td> <input id="yearTwoExp" type="number"</td>
+        <td> <input id="yearThreeExp" type="number"></td>
+        <td> <input id="yearFourExp" type="number"</td>
+        <td> <input id="yearFiveExp" type="number"></td>
+      </tr>
+      <tr>
+        <td> Ending Cash </td>
+        <td> <p id="endCashYear1" class="output"> </p> </td>
+        <td id="yearTwoEndCash" type="number"></td>
+        <td id="yearThreeEndCash" type="number"></td>
+        <td id="yearFourEndCash" type="number"></td>
+        <td id="yearFiveEndCash" type="number"></td>
+      </tr>
+    </table>
+    <br>
+    <button id="calculate-simulation-button" type="button">Calculate</button>
+    <p id="result"></p>
+    <br>
+
+    <script>
+     
+      const calculateSimulationButton = document.getElementById('calculate-simulation-button');
+      const resultParagraph = document.getElementById('result');
+      const yearOneCash = document.getElementById('startCash');
+      const Revenue = [document.getElementById('yearOneRev'), 
+        document.getElementById('yearTwoRev'), 
+        document.getElementById('yearThreeRev'), 
+        document.getElementById('yearFourRev'), 
+        document.getElementById('yearFiveRev')];
+      const Expenses = [document.getElementById('yearOneExp'), 
+        document.getElementById('yearTwoExp'), 
+        document.getElementById('yearThreeExp'), 
+        document.getElementById('yearFourExp'), 
+        document.getElementById('yearFiveExp')];
+
+      calculateSimulationButton.onclick = () => {
+        let httpRequestData = {
+          begCash: Number(startCash.value),
+          Revenue: [Number(yearOneRev.value),
+            Number(yearTwoRev.value),
+            Number(yearThreeRev.value),
+            Number(yearFourRev.value),
+            Number(yearFiveRev.value)],
+          Expenses: [Number(yearOneExp.value),
+            Number(yearTwoExp.value),
+            Number(yearThreeExp.value),
+            Number(yearFourExp.value),
+            Number(yearFiveExp.value)],
+        };
+
+        fetch('api/calculate', {
+          method: 'post',
+          body: JSON.stringify(httpRequestData),
+        }).then((response) => {
+          return response.json();
+        }).then((httpResponseData) => {
+          let resultText;
+          if (httpResponseData.result !== undefined) {
+            resultText = httpResponseData.result;
+            document.getElementById("result").innerHTML = "this works";
+
+          } else {
+            resultText = "Something went wrong :(";
+          }
+          resultParagraph.innerText = resultText;
+        });
+      }
+
+      function addItem(elementTable,objectName) {
+        var programIndex = 2;
+        var table = document.getElementById(elementTable);
+        var row = table.insertRow(-1);
+        var cell1 = row.insertCell(-1);
+        cell1.innerHTML = "<input type='text' id='newProgram' placeholder='New Program'>";
+        objectName.name = document.getElementById('newProgram').value;
+        console.log(objectName.name)
+      }
+
+      function deleteItem(elementTable) {
+        document.getElementById(elementTable).deleteRow(-1);
+      }
+
+
+//"Function needs to be updated if years out is greater than 5"
+      function yearDisplay() {
+        startYear = parseInt(document.getElementById('startYear').value);
+        document.getElementById('yearOneLabel').innerHTML = startYear;
+        document.getElementById("yearTwoLabel").innerHTML = startYear + 1;
+        document.getElementById("yearThreeLabel").innerHTML = startYear + 2;
+        document.getElementById("yearFourLabel").innerHTML = startYear + 3;
+        document.getElementById("yearFiveLabel").innerHTML = startYear + 4;
+    }
+
+      function cashStartDisplay() {
+        number = +document.getElementById("startCash").value;
+        document.getElementById("begCash").innerHTML = numberWithCommas(number);
+        document.getElementById("startCash").innerHTML = numberWithCommas(number);
+      }
+
+      function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
+
+      function addProgram(programName) {
+        program.row.add({
+          name: programName
+        }).draw}
+
+//"Think through how I can make this into a function"//
+      function developmentPhases() {
+        discoveryCost = document.getElementById('discoveryCost').value;
+        preclinicalCost = document.getElementById('preclinicalCost').value;
+        //"Phase 1 costs //
+        phase1Patients = document.getElementById('phase1Patients').value;
+        phase1PatientCost = document.getElementById('phase1PatientCost').value;
+        phase1Total = phase1Patients * phase1PatientCost
+        document.getElementById('phase1Total').innerHTML = numberWithCommas(phase1Total);
+        //"Phase 2 costs //
+        phase2Patients = document.getElementById('phase2Patients').value;
+        phase2PatientCost = document.getElementById('phase2PatientCost').value;
+        phase2Total = phase2Patients * phase2PatientCost
+        document.getElementById('phase2Total').innerHTML = numberWithCommas(phase2Total);
+        //"Phase 3 costs //
+        phase3Patients = document.getElementById('phase3Patients').value;
+        phase3PatientCost = document.getElementById('phase3PatientCost').value;
+        phase3Total = phase3Patients * phase3PatientCost
+        document.getElementById('phase3Total').innerHTML = numberWithCommas(phase3Total);
+      }
+
+
+
+    </script>
+</html>

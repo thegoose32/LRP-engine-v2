@@ -14,16 +14,18 @@ class BadDataException(Exception):
     pass
 
 
-years = list(range(0,5))
-yearEndCash = {}
+
 
 def end_cash(beg_cash,revenue,expenses):
+    years = list(range(0,5))
+    yearEndCash = {}
     for year in years:
         if year == 0:
             yearEndCash[year] = beg_cash + revenue[year] - expenses[year]
         else:
             yearEndCash[year] = yearEndCash[year-1] + revenue[year] - expenses[year]
-    print(yearEndCash)
+
+    return yearEndCash
 
 
 def process_data(data):

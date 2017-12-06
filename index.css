@@ -30,6 +30,7 @@ p.output {
   text-align: right;
   padding: 0;
   border-collapse: collapse;
+  margin: 0;
 }
 
 input[type=number]::-webkit-inner-spin-button, 

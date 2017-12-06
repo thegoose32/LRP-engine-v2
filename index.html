@@ -91,6 +91,7 @@
       </tr>   
     </table>
     <br>
+    <button onclick="programTable()">Submit</button>
     <button onclick="addItem('programs',programs)">Add</button>
     <button onclick="deleteItem('programs')">Delete</button>
     <br>
@@ -146,7 +147,7 @@
     <table>
       <tr>
         <th col>Item</th>
-        <th col class="yearOneLabel"> </th>
+        <th col class="year1Label"> </th>
         <th col id="yearTwoLabel" class="otherExpense"> </th>
         <th col id="yearThreeLabel" class="otherExpense"> </th>
         <th col id="yearFourLabel" class="otherExpense"> </th>
@@ -186,39 +187,38 @@
       <tr>
         <td> Beginning Cash </td>
         <td> <p id="begCash" type="number" class="output"> </td>
-        <td id="yearTwoBegCash" type="number"</td>
-        <td id="yearThreeBegCash" type="number"</td>
-        <td id="yearFourBegCash" type="number"</td>
-        <td id="yearFiveBegCash" type="number"</td>
+        <td> <p id="begCashYear2" type="number" class="output"</td>
+        <td> <p id="begCashYear3" type="number" class="output"</td>
+        <td> <p id="begCashYear4" type="number" class="output"</td>
+        <td> <p id="begCashYear5" type="number" class="output"</td>
       </tr>
       <tr>
         <td> Revenue </td>
-        <td> <input id="yearOneRev" type="number"></td>
-        <td> <input id="yearTwoRev" type="number"</td>
-        <td> <input id="yearThreeRev" type="number"></td>
-        <td> <input id="yearFourRev" type="number"</td>
-        <td> <input id="yearFiveRev" type="number"></td>
+        <td> <input id="yearOneRev" type="number" class="right"></td>
+        <td> <input id="yearTwoRev" type="number" class="right"</td>
+        <td> <input id="yearThreeRev" type="number" class="right"></td>
+        <td> <input id="yearFourRev" type="number" class="right"</td>
+        <td> <input id="yearFiveRev" type="number" class="right"></td>
       </tr>
       <tr>
         <td> Expenses </td>
-        <td> <input id="yearOneExp" type="number"></td>
-        <td> <input id="yearTwoExp" type="number"</td>
-        <td> <input id="yearThreeExp" type="number"></td>
-        <td> <input id="yearFourExp" type="number"</td>
-        <td> <input id="yearFiveExp" type="number"></td>
+        <td> <input id="yearOneExp" type="number" class="right"></td>
+        <td> <input id="yearTwoExp" type="number" class="right"</td>
+        <td> <input id="yearThreeExp" type="number" class="right"></td>
+        <td> <input id="yearFourExp" type="number" class="right"</td>
+        <td> <input id="yearFiveExp" type="number" class="right"></td>
       </tr>
       <tr>
         <td> Ending Cash </td>
         <td> <p id="endCashYear1" class="output"> </p> </td>
-        <td id="yearTwoEndCash" type="number"></td>
-        <td id="yearThreeEndCash" type="number"></td>
-        <td id="yearFourEndCash" type="number"></td>
-        <td id="yearFiveEndCash" type="number"></td>
+        <td> <p id="endCashYear2" class="output"></td>
+        <td> <p id="endCashYear3" class="output" type="number"></td>
+        <td> <p id="endCashYear4" class="output" type="number"></td>
+        <td> <p id="endCashYear5" class="output" type="number"></td>
       </tr>
     </table>
     <br>
     <button id="calculate-simulation-button" type="button">Calculate</button>
-    <p id="result"></p>
     <br>
 
     <script>
@@ -262,16 +262,23 @@
           if (httpResponseData.result !== undefined) {
             resultText = httpResponseData.result;
             document.getElementById("result").innerHTML = "this works";
-
-          } else {
+            for (yearIndex = 1; yearIndex<6; yearIndex ++) {
+              if (yearIndex === 1) {
+                document.getElementById("endCashYear"+yearIndex).innerHTML = numberWithCommas(resultText[yearIndex-1]);
+              } else {
+                document.getElementById("begCashYear"+yearIndex).innerHTML = numberWithCommas(resultText[yearIndex-2]);
+                document.getElementById("endCashYear"+yearIndex).innerHTML = numberWithCommas(resultText[yearIndex-1]);
+              }
+            }
+            } else {
             resultText = "Something went wrong :(";
-          }
+            }
           resultParagraph.innerText = resultText;
-        });
-      }
+          });
+      } 
 
       function addItem(elementTable,objectName) {
-        var programIndex = 2;
+        var programIndex = 3;
         var table = document.getElementById(elementTable);
         var row = table.insertRow(-1);
         var cell1 = row.insertCell(-1);
@@ -287,7 +294,11 @@
 
 //"Function needs to be updated if years out is greater than 5"
       function yearDisplay() {
+        periodIndex = 5
         startYear = parseInt(document.getElementById('startYear').value);
+        //for (x=1; x<periodIndex; x++) {
+        //  document.getElementById('year'+x+'label').innerHTML = startYear + x
+        //}
         document.getElementById('yearOneLabel').innerHTML = startYear;
         document.getElementById("yearTwoLabel").innerHTML = startYear + 1;
         document.getElementById("yearThreeLabel").innerHTML = startYear + 2;
@@ -304,11 +315,6 @@
       function numberWithCommas(x) {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       }
-
-      function addProgram(programName) {
-        program.row.add({
-          name: programName
-        }).draw}
 
 //"Think through how I can make this into a function"//
       function developmentPhases() {
@@ -329,6 +335,20 @@
         phase3PatientCost = document.getElementById('phase3PatientCost').value;
         phase3Total = phase3Patients * phase3PatientCost
         document.getElementById('phase3Total').innerHTML = numberWithCommas(phase3Total);
+      }
+
+      function programTable() {
+        var tableInfo = []
+        var programIndex = 3
+        var x = 1
+        for (x = 1; x < 3; x++) {
+        tableInfo.push(Array.prototype.map.call(document.querySelectorAll('#programs'), function(tr){
+          return Array.prototype.map.call(tr.querySelectorAll('td'), function(td){
+            return document.getElementById('program');
+            });
+          }));
+        console.log(tableInfo)
+        }
       }
 
 

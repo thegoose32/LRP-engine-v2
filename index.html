@@ -78,22 +78,13 @@
     <table id="programs">
       <tr>
         <th col>Program Name</th>
-        <th class="blank"></th>
       </tr>
       <tr>
-        <td> <input id="newProgram1" type="text" placeholder="Program Name"></td>
+        <td> <input id="newProgram" type="text" placeholder="New Program" class="programs"></td>
       </tr>
-      <tr>
-        <td> <input id="newProgram2" type="text" placeholder="Program Name"></td>
-      </tr>
-      <tr>
-        <td> <input id="newProgram3" type="text" placeholder="Program Name"></td>
-      </tr>   
     </table>
     <br>
-    <button onclick="programTable()">Submit</button>
-    <button onclick="addItem('programs',programs)">Add</button>
-    <button onclick="deleteItem('programs')">Delete</button>
+    <button onclick="addProgram()">Submit</button>
     <br>
     <hr>
     <h3>
@@ -110,15 +101,15 @@
       Full Time Employees
     </h3>
     <p>Annual merit increase assumption (%):<p><input id="meritIncrease" type="percent">
-    <table>
+    <table id="FTEs">
       <tr>
         <th col>Department</th>
         <th col>Fully-loaded cost</th>
-        <th col class="yearOneLabel"> </th>
-        <th col id="yearTwoLabel" class="FTE"> </th>
-        <th col id="yearThreeLabel" class="FTE"> </th>
-        <th col id="yearFourLabel" class="FTE"> </th>
-        <th col id="yearFiveLabel" class="FTE"> </th>
+        <th col id="FTEsYear0Label"> </th>
+        <th col id="FTEsYear1Label"> </th>
+        <th col id="FTEsYear2Label"> </th>
+        <th col id="FTEsYear3Label"> </th>
+        <th col id="FTEsYear4Label"> </th>
      </tr>
      <tr>
         <td> Research and Development </td>
@@ -144,14 +135,14 @@
     <h3>
       Other Expenses
     </h3>
-    <table>
+    <table id="otherExpense">
       <tr>
         <th col>Item</th>
-        <th col class="year1Label"> </th>
-        <th col id="yearTwoLabel" class="otherExpense"> </th>
-        <th col id="yearThreeLabel" class="otherExpense"> </th>
-        <th col id="yearFourLabel" class="otherExpense"> </th>
-        <th col id="yearFiveLabel" class="otherExpense"> </th>
+        <th id="otherExpenseYear0Label"> </th>
+        <th col id="otherExpenseYear1Label" class="otherExpense"> </th>
+        <th col id="otherExpenseYear2Label" class="otherExpense"> </th>
+        <th col id="otherExpenseYear3Label" class="otherExpense"> </th>
+        <th col id="otherExpenseYear4Label" class="otherExpense"> </th>
       </tr>
       <tr>
         <td> <input type="text" placeholder="CapEx"></td>
@@ -175,14 +166,14 @@
     <h3>
       Financial Results
     </h3>
-    <table>
+    <table id="financialResults">
       <tr>
         <th col id="resultItems">Item </th>
-        <th col id="yearOneLabel"> </th>
-        <th col id="yearTwoLabel"> </th>
-        <th col id="yearThreeLabel"> </th>
-        <th col id="yearFourLabel"> </th>
-        <th col id="yearFiveLabel"> </th>
+        <th col id="financialResultsYear0Label"> </th>
+        <th col id="financialResultsYear1Label"> </th>
+        <th col id="financialResultsYear2Label"> </th>
+        <th col id="financialResultsYear3Label"> </th>
+        <th col id="financialResultsYear4Label"> </th>
       </tr>
       <tr>
         <td> Beginning Cash </td>
@@ -224,7 +215,6 @@
     <script>
      
       const calculateSimulationButton = document.getElementById('calculate-simulation-button');
-      const resultParagraph = document.getElementById('result');
       const yearOneCash = document.getElementById('startCash');
       const Revenue = [document.getElementById('yearOneRev'), 
         document.getElementById('yearTwoRev'), 
@@ -277,34 +267,16 @@
           });
       } 
 
-      function addItem(elementTable,objectName) {
-        var programIndex = 3;
-        var table = document.getElementById(elementTable);
-        var row = table.insertRow(-1);
-        var cell1 = row.insertCell(-1);
-        cell1.innerHTML = "<input type='text' id='newProgram' placeholder='New Program'>";
-        objectName.name = document.getElementById('newProgram').value;
-        console.log(objectName.name)
-      }
-
-      function deleteItem(elementTable) {
-        document.getElementById(elementTable).deleteRow(-1);
-      }
-
-
 //"Function needs to be updated if years out is greater than 5"
       function yearDisplay() {
-        periodIndex = 5
+        yearDisplayArray = ['financialResults','otherExpense','FTEs']
         startYear = parseInt(document.getElementById('startYear').value);
-        //for (x=1; x<periodIndex; x++) {
-        //  document.getElementById('year'+x+'label').innerHTML = startYear + x
-        //}
-        document.getElementById('yearOneLabel').innerHTML = startYear;
-        document.getElementById("yearTwoLabel").innerHTML = startYear + 1;
-        document.getElementById("yearThreeLabel").innerHTML = startYear + 2;
-        document.getElementById("yearFourLabel").innerHTML = startYear + 3;
-        document.getElementById("yearFiveLabel").innerHTML = startYear + 4;
-    }
+        for (x=0; x<yearDisplayArray.length; x++) {
+          for (y=0; y<5; y++) {
+            document.getElementById(yearDisplayArray[x]+'Year'+y+'Label').innerHTML = startYear + y;
+            }
+          }
+        }
 
       function cashStartDisplay() {
         number = +document.getElementById("startCash").value;
@@ -337,20 +309,30 @@
         document.getElementById('phase3Total').innerHTML = numberWithCommas(phase3Total);
       }
 
-      function programTable() {
-        var tableInfo = []
-        var programIndex = 3
-        var x = 1
-        for (x = 1; x < 3; x++) {
-        tableInfo.push(Array.prototype.map.call(document.querySelectorAll('#programs'), function(tr){
-          return Array.prototype.map.call(tr.querySelectorAll('td'), function(td){
-            return document.getElementById('program');
-            });
-          }));
-        console.log(tableInfo)
-        }
-      }
+      programList = []
+      programName = document.getElementById("newProgram");
+      displayProgramList = document.getElementById("displayProgram");
 
+      function addProgram() {
+        programList.push(programName.value);
+        displayProgram();
+      }
+      
+      function displayProgram() {
+        // Clear our fields
+        programName.value = "";
+  
+        // Show our output
+        displayProgramList.innerHTML = "";
+        displayProgramList.innerHTML += programList.join(", ");
+
+        programTable = document.getElementById("programs");
+        var row = programTable.insertRow(-1);
+        var cell = row.insertCell(-1);
+        cell.appendChild(document.createTextNode(programList[programList.length - 1]));
+        
+
+      }
 
 
     </script>

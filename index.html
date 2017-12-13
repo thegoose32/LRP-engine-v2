@@ -92,8 +92,61 @@
     </h3>
     <table id="programTimeline">
       <tr>
+        <th col>Programs</th>
+        <th col id="programTimelineYear0Label"> </th>
+        <th col id="programTimelineYear1Label"> </th>
+        <th col id="programTimelineYear2Label"> </th>
+        <th col id="programTimelineYear3Label"> </th>
+        <th col id="programTimelineYear4Label"> </th> 
       </tr>
-    </table>
+      <tr>
+        <td id="program0"></td>
+        <td>
+          <select>
+            <option value="discovery">Discovery</option>
+            <option value="preclinical">Preclinical</option>
+            <option value="phase1">Phase 1</option>
+            <option value="phase2">Phase 2</option>
+            <option value="phase3">Phase 3</option>
+          </select>
+        </td>
+        <td>
+          <select>
+            <option value="discovery">Discovery</option>
+            <option value="preclinical">Preclinical</option>
+            <option value="phase1">Phase 1</option>
+            <option value="phase2">Phase 2</option>
+            <option value="phase3">Phase 3</option>
+          </select>
+        </td>
+        <td>
+          <select>
+            <option value="discovery">Discovery</option>
+            <option value="preclinical">Preclinical</option>
+            <option value="phase1">Phase 1</option>
+            <option value="phase2">Phase 2</option>
+            <option value="phase3">Phase 3</option>
+          </select>
+        </td>
+        <td>
+          <select>
+            <option value="discovery">Discovery</option>
+            <option value="preclinical">Preclinical</option>
+            <option value="phase1">Phase 1</option>
+            <option value="phase2">Phase 2</option>
+            <option value="phase3">Phase 3</option>
+          </select>
+        </td>
+        <td>
+          <select>
+            <option value="discovery">Discovery</option>
+            <option value="preclinical">Preclinical</option>
+            <option value="phase1">Phase 1</option>
+            <option value="phase2">Phase 2</option>
+            <option value="phase3">Phase 3</option>
+          </select>
+        </td>
+   </table>
     <br>
     
     <hr>
@@ -269,7 +322,7 @@
 
 //"Function needs to be updated if years out is greater than 5"
       function yearDisplay() {
-        yearDisplayArray = ['financialResults','otherExpense','FTEs']
+        yearDisplayArray = ['financialResults','otherExpense','FTEs','programTimeline']
         startYear = parseInt(document.getElementById('startYear').value);
         for (x=0; x<yearDisplayArray.length; x++) {
           for (y=0; y<5; y++) {
@@ -316,6 +369,7 @@
       function addProgram() {
         programList.push(programName.value);
         displayProgram();
+        programDevPhases();
       }
       
       function displayProgram() {
@@ -323,17 +377,36 @@
         programName.value = "";
   
         // Show our output
-        displayProgramList.innerHTML = "";
-        displayProgramList.innerHTML += programList.join(", ");
-
         programTable = document.getElementById("programs");
         var row = programTable.insertRow(-1);
         var cell = row.insertCell(-1);
         cell.appendChild(document.createTextNode(programList[programList.length - 1]));
-        
+        }
 
+      function programDevPhases() {
+        for (x=0; x<programList.length; x++) {
+          if (x===0) {
+            document.getElementById("program"+x).innerHTML = programList[x];
+          } else {
+            var table = document.getElementById('programTimeline');
+            var row = table.insertRow(table.rows.length);
+            for (i=0; i < table.rows[0].cells.length; i++) {
+              createCell(row.insertCell(i), i, 'row');
+            }
+            document.getElementById("program"+x).innerHTML = programList[x];
+          }
+        }
       }
 
+      function createCell(cell, text, style) {
+        var div = document.createElement("program"+(i+1)), // create DIV element
+          txt = document.createTextNode(text); // create text node
+        div.appendChild(txt);                    // append text node to the DIV
+        div.setAttribute('class', style);        // set DIV class attribute
+        div.setAttribute('className', style);    // set DIV class attribute for IE (?!)
+        div.setAttribute('id', "program"+(i+1));
+        cell.appendChild(div);                   // append DIV to the table cell
+}
 
     </script>
 </html>

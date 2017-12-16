@@ -304,7 +304,6 @@
           let resultText;
           if (httpResponseData.result !== undefined) {
             resultText = httpResponseData.result;
-            document.getElementById("result").innerHTML = "this works";
             for (yearIndex = 1; yearIndex<6; yearIndex ++) {
               if (yearIndex === 1) {
                 document.getElementById("endCashYear"+yearIndex).innerHTML = numberWithCommas(resultText[yearIndex-1]);
@@ -384,7 +383,7 @@
         }
 
       function programDevPhases() {
-        for (x=0; x<programList.length; x++) {
+        for (x=programList.length-1; x<programList.length; x++) {
           if (x===0) {
             document.getElementById("program"+x).innerHTML = programList[x];
           } else {
@@ -399,12 +398,12 @@
       }
 
       function createCell(cell, text, style) {
-        var div = document.createElement("program"+(i+1)), // create DIV element
+        var div = document.createElement("program"+x), // create DIV element
           txt = document.createTextNode(text); // create text node
         div.appendChild(txt);                    // append text node to the DIV
         div.setAttribute('class', style);        // set DIV class attribute
         div.setAttribute('className', style);    // set DIV class attribute for IE (?!)
-        div.setAttribute('id', "program"+(i+1));
+        div.setAttribute('id', "program"+x);
         cell.appendChild(div);                   // append DIV to the table cell
 }
 

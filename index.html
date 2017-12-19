@@ -84,7 +84,7 @@
       </tr>
     </table>
     <br>
-    <button onclick="addProgram()">Submit</button>
+    <button onclick="addProgram()">Add Program</button>
     <br>
     <hr>
     <h3>
@@ -153,7 +153,6 @@
     <h3>
       Full Time Employees
     </h3>
-    <p>Annual merit increase assumption (%):<p><input id="meritIncrease" type="percent">
     <table id="FTEs">
       <tr>
         <th col>Department</th>
@@ -166,24 +165,34 @@
      </tr>
      <tr>
         <td> Research and Development </td>
-        <td> <input type="number"> </td>
-        <td> <input type="number"> </td>
-        <td> <input type="number"> </td>
-        <td> <input type="number"> </td>
-        <td> <input type="number"> </td>
-        <td> <input type="number"> </td>
+        <td> <input id="rdFTECost" type="number"> </td>
+        <td> <input id="rdYear0FTECount" type="number"> </td>
+        <td> <input id="rdYear1FTECount" type="number"> </td>
+        <td> <input id="rdYear2FTECount" type="number"> </td>
+        <td> <input id="rdYear3FTECount" type="number"> </td>
+        <td> <input id="rdYear4FTECount" type="number"> </td>
      </tr>
      <tr>
         <td> General and Admin </td>
-        <td> <input type="number"> </td>
-        <td> <input type="number"> </td>
-        <td> <input type="number"> </td>
-        <td> <input type="number"> </td>
-        <td> <input type="number"> </td>
-        <td> <input type="number"> </td>
-     </tr>
+        <td> <input id="gaFTECost" type="number"> </td>
+        <td> <input id="gaYear0FTECount" type="number"> </td>
+        <td> <input id="gaYear1FTECount" type="number"> </td>
+        <td> <input id="gaYear2FTECount" type="number"> </td>
+        <td> <input id="gaYear3FTECount" type="number"> </td>
+        <td> <input id="gaYear4FTECount" type="number"> </td>
+    </tr>
+    <tr>
+      <td> Total Cost </td>
+      <td> </td>
+      <td> <p id="year0FTECost" class="output"></td>
+      <td> <p id="year1FTECost" class="output"></td>
+      <td> <p id="year2FTECost" class="output"></td>
+      <td> <p id="year3FTECost" class="output"></td>
+      <td> <p id="year4FTECost" class="output"></td>
+    </tr>
     </table>
     <br>
+    <button onclick="FTECost()">Submit</button>
     <hr>
     <h3>
       Other Expenses
@@ -389,10 +398,14 @@
           } else {
             var table = document.getElementById('programTimeline');
             var row = table.insertRow(table.rows.length);
-            for (i=0; i < table.rows[0].cells.length; i++) {
-              createCell(row.insertCell(i), i, 'row');
+            for (i=0; i<table.rows[0].cells.length; i++) {
+              if (i===0) {
+                createCell(row.insertCell(i), i, 'row');
+                document.getElementById("program"+x).innerHTML = programList[x];
+              } else {
+                createDevPhaseCell(row.insertCell(i), 'row');
+              }
             }
-            document.getElementById("program"+x).innerHTML = programList[x];
           }
         }
       }
@@ -406,6 +419,41 @@
         div.setAttribute('id', "program"+x);
         cell.appendChild(div);                   // append DIV to the table cell
 }
+
+      function createDevPhaseCell(cell, style) {
+        var div = document.createElement('select');
+        const devPhases = ["Discovery", "Preclinical", "Phase 1", "Phase 2", "Phase 3"];
+        for (x=0; x<devPhases.length; x++) {
+          devPhaseOption = document.createElement('option');
+          devPhaseOption.innerHTML = devPhases[x];
+          div.appendChild(devPhaseOption);
+        }
+        div.type = "select";
+        cell.appendChild(div);
+      }
+
+//"FTE functions"
+
+      function FTECost() {
+        var FTECost = {
+          "rd": [],
+          "ga": [],
+          "total": []
+          }
+        var FTEClass = ["rd", "ga"];
+        for (x=0; x<FTEClass.length; x++) {
+          for (y=0; y<5; y++) {
+            rate = document.getElementById(FTEClass[x]+"FTECost").value;
+            FTECount = document.getElementById(FTEClass[x]+"Year"+y+"FTECount").value;
+            FTECost[FTEClass[x]][y] = rate * FTECount
+          }
+        }
+        for (z=0; z<5; z++) {
+          FTECost["total"][z] = FTECost["rd"][z] + FTECost["ga"][z];
+          document.getElementById("year"+z+"FTECost").innerHTML = numberWithCommas(FTECost["total"][z]);
+        }       
+        console.log(FTECost);
+      }
 
     </script>
 </html>

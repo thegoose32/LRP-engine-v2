@@ -92,7 +92,7 @@
     </h3>
     <table id="programTimeline">
       <tr>
-        <th col>Programs</th>
+        <th col>Program</th>
         <th col id="programTimelineYear0Label"> </th>
         <th col id="programTimelineYear1Label"> </th>
         <th col id="programTimelineYear2Label"> </th>
@@ -148,7 +148,7 @@
         </td>
    </table>
     <br>
-    
+    <button onclick="devPhaseCount()">Submit</button>
     <hr>
     <h3>
       Full Time Employees
@@ -349,7 +349,7 @@
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       }
 
-//"Think through how I can make this into a function"//
+//"Think through how I can make this into a function"
       function developmentPhases() {
         discoveryCost = document.getElementById('discoveryCost').value;
         preclinicalCost = document.getElementById('preclinicalCost').value;
@@ -422,15 +422,59 @@
 
       function createDevPhaseCell(cell, style) {
         var div = document.createElement('select');
-        const devPhases = ["Discovery", "Preclinical", "Phase 1", "Phase 2", "Phase 3"];
-        for (x=0; x<devPhases.length; x++) {
+        const devPhases = [
+          {
+            id: "discovery",
+            name: "Discovery"
+          },
+          {
+            id: "preclinical",
+            name: "Prelinical"
+          },
+          {
+            id: "phase1",
+            name: "Phase 1"
+          },
+          {
+            id: "phase2",
+            name: "Phase 2"
+          },
+          {
+            id: "phase3",
+            name: "Phase 3"
+          },
+          {
+            id: "na",
+            name: "N/A"
+          }
+          ]
+
+        for (x=0; x<Object.keys(devPhases).length; x++) {
           devPhaseOption = document.createElement('option');
-          devPhaseOption.innerHTML = devPhases[x];
+          attribute = document.createAttribute('id');
+          devPhaseOption.innerHTML = devPhases[x]['name'];
+          attribute.value = devPhases[x]['id'];
           div.appendChild(devPhaseOption);
+          devPhaseOption.setAttributeNode(attribute);
         }
         div.type = "select";
         cell.appendChild(div);
       }
+
+      function devPhaseCount() {
+        var table = document.getElementById("programTimeline");
+        var discoveryCount = 0;
+        for (var x=0, row; row = table.rows[x]; x++) {
+          for (var y=0, col; col = row.cells[y]; y++) {
+            selectedPhase = document.querySelector("select").value;
+            if (selectedPhase === "discovery") {
+              discoveryCount ++
+            };
+          }
+        }
+        console.log(discoveryCount);
+      }
+
 
 //"FTE functions"
 

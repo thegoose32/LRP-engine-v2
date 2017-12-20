@@ -99,54 +99,7 @@
         <th col id="programTimelineYear3Label"> </th>
         <th col id="programTimelineYear4Label"> </th> 
       </tr>
-      <tr>
-        <td id="program0"></td>
-        <td>
-          <select>
-            <option value="discovery">Discovery</option>
-            <option value="preclinical">Preclinical</option>
-            <option value="phase1">Phase 1</option>
-            <option value="phase2">Phase 2</option>
-            <option value="phase3">Phase 3</option>
-          </select>
-        </td>
-        <td>
-          <select>
-            <option value="discovery">Discovery</option>
-            <option value="preclinical">Preclinical</option>
-            <option value="phase1">Phase 1</option>
-            <option value="phase2">Phase 2</option>
-            <option value="phase3">Phase 3</option>
-          </select>
-        </td>
-        <td>
-          <select>
-            <option value="discovery">Discovery</option>
-            <option value="preclinical">Preclinical</option>
-            <option value="phase1">Phase 1</option>
-            <option value="phase2">Phase 2</option>
-            <option value="phase3">Phase 3</option>
-          </select>
-        </td>
-        <td>
-          <select>
-            <option value="discovery">Discovery</option>
-            <option value="preclinical">Preclinical</option>
-            <option value="phase1">Phase 1</option>
-            <option value="phase2">Phase 2</option>
-            <option value="phase3">Phase 3</option>
-          </select>
-        </td>
-        <td>
-          <select>
-            <option value="discovery">Discovery</option>
-            <option value="preclinical">Preclinical</option>
-            <option value="phase1">Phase 1</option>
-            <option value="phase2">Phase 2</option>
-            <option value="phase3">Phase 3</option>
-          </select>
-        </td>
-   </table>
+    </table>
     <br>
     <button onclick="devPhaseCount()">Submit</button>
     <hr>
@@ -393,9 +346,6 @@
 
       function programDevPhases() {
         for (x=programList.length-1; x<programList.length; x++) {
-          if (x===0) {
-            document.getElementById("program"+x).innerHTML = programList[x];
-          } else {
             var table = document.getElementById('programTimeline');
             var row = table.insertRow(table.rows.length);
             for (i=0; i<table.rows[0].cells.length; i++) {
@@ -408,7 +358,6 @@
             }
           }
         }
-      }
 
       function createCell(cell, text, style) {
         var div = document.createElement("program"+x), // create DIV element

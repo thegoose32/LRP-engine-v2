@@ -57,3 +57,10 @@ button {
 textarea:focus, input:focus{
     outline-color: #39CCCC;
 }
+
+p.error {
+  color: red;
+  font-weight: bold;
+  font-size: 12px;
+  font-family: arial, sans-serif;
+};

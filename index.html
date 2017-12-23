@@ -85,7 +85,7 @@
     </table>
     <br>
     <button onclick="addProgram()">Add Program</button>
-    <br>
+    <p id="newProgramError" class="error"></p>
     <hr>
     <h3>
       Program Development Timeline
@@ -104,7 +104,7 @@
     <button onclick="devPhaseCount()">Submit</button>
     <hr>
     <h3>
-      Full Time Employees
+      Employee Expenses
     </h3>
     <table id="FTEs">
       <tr>
@@ -118,30 +118,21 @@
      </tr>
      <tr>
         <td> Research and Development </td>
-        <td> <input id="rdFTECost" type="number"> </td>
-        <td> <input id="rdYear0FTECount" type="number"> </td>
-        <td> <input id="rdYear1FTECount" type="number"> </td>
-        <td> <input id="rdYear2FTECount" type="number"> </td>
-        <td> <input id="rdYear3FTECount" type="number"> </td>
-        <td> <input id="rdYear4FTECount" type="number"> </td>
+        <td> <input id="rdFTECost" type="number" class="right"> </td>
+        <td> <input id="rdYear0FTECount" type="number" class="right"> </td>
+        <td> <input id="rdYear1FTECount" type="number" class="right"> </td>
+        <td> <input id="rdYear2FTECount" type="number" class="right"> </td>
+        <td> <input id="rdYear3FTECount" type="number" class="right"> </td>
+        <td> <input id="rdYear4FTECount" type="number" class="right"> </td>
      </tr>
      <tr>
         <td> General and Admin </td>
-        <td> <input id="gaFTECost" type="number"> </td>
-        <td> <input id="gaYear0FTECount" type="number"> </td>
-        <td> <input id="gaYear1FTECount" type="number"> </td>
-        <td> <input id="gaYear2FTECount" type="number"> </td>
-        <td> <input id="gaYear3FTECount" type="number"> </td>
-        <td> <input id="gaYear4FTECount" type="number"> </td>
-    </tr>
-    <tr>
-      <td> Total Cost </td>
-      <td> </td>
-      <td> <p id="year0FTECost" class="output"></td>
-      <td> <p id="year1FTECost" class="output"></td>
-      <td> <p id="year2FTECost" class="output"></td>
-      <td> <p id="year3FTECost" class="output"></td>
-      <td> <p id="year4FTECost" class="output"></td>
+        <td> <input id="gaFTECost" type="number" class="right"> </td>
+        <td> <input id="gaYear0FTECount" type="number" class="right"> </td>
+        <td> <input id="gaYear1FTECount" type="number" class="right"> </td>
+        <td> <input id="gaYear2FTECount" type="number" class="right"> </td>
+        <td> <input id="gaYear3FTECount" type="number" class="right"> </td>
+        <td> <input id="gaYear4FTECount" type="number" class="right"> </td>
     </tr>
     </table>
     <br>
@@ -160,15 +151,7 @@
         <th col id="otherExpenseYear4Label" class="otherExpense"> </th>
       </tr>
       <tr>
-        <td> <input type="text" placeholder="CapEx"></td>
-        <td> <input type="number"> </td>
-        <td> <input type="number"> </td>
-        <td> <input type="number"> </td>
-        <td> <input type="number"> </td>
-        <td> <input type="number"> </td>
-      </tr>
-      <tr>
-        <td> <input type="text" placeholder="Corporate Expenses"></td>
+        <td> <input type="text" placeholder="e.g. CapEx"></td>
         <td> <input type="number"> </td>
         <td> <input type="number"> </td>
         <td> <input type="number"> </td>
@@ -176,7 +159,27 @@
         <td> <input type="number"> </td>
       </tr>
     </table>
-    <br> 
+    <br>
+    <button onclick="addRow('otherExpense')">Add</button>
+    <br>
+    <hr>
+    <h3>
+      Financings
+    </h3>
+    <table id="financings">
+      <tr>
+        <th>Name</th>
+        <th>Amount</th>
+        <th>Period</th>
+      </tr>
+      <tr>
+        <td> <input type="text"> </td>
+        <td> <input type="number" class="right"> </td>
+        <td> <input type="number" class="right"> </td>
+      </tr>
+    </table>
+    <br>
+    <button onclick="addRow('financings')">Add</button>
     <hr>
     <h3>
       Financial Results
@@ -207,12 +210,36 @@
         <td> <input id="yearFiveRev" type="number" class="right"></td>
       </tr>
       <tr>
-        <td> Expenses </td>
-        <td> <input id="yearOneExp" type="number" class="right"></td>
-        <td> <input id="yearTwoExp" type="number" class="right"</td>
-        <td> <input id="yearThreeExp" type="number" class="right"></td>
-        <td> <input id="yearFourExp" type="number" class="right"</td>
-        <td> <input id="yearFiveExp" type="number" class="right"></td>
+        <td> Expenses: </td>
+        <td> </td>
+        <td> </td>
+        <td> </td>
+        <td> </td>
+        <td> </td>
+      </tr>
+      <tr>
+        <td> Program Expense </td>
+        <td> </td>
+        <td> </td>
+        <td> </td>
+        <td> </td>
+        <td> </td>
+      </tr>
+      <tr>
+        <td> Headcount Expense </td>
+        <td> <p id="year0FTECost" class="output"></td>
+        <td> <p id="year1FTECost" class="output"></td>
+        <td> <p id="year2FTECost" class="output"></td>
+        <td> <p id="year3FTECost" class="output"></td>
+        <td> <p id="year4FTECost" class="output"></td>
+     </tr>
+      <tr>
+        <td> Other Expense </td>
+        <td> </td>
+        <td> </td>
+        <td> </td>
+        <td> </td>
+        <td> </td>
       </tr>
       <tr>
         <td> Ending Cash </td>
@@ -281,12 +308,17 @@
           });
       } 
 
+//"need to determine global vs local variables. I need model years in other places (checking financings year, etc)"
+var modelYears = [] 
+
 //"Function needs to be updated if years out is greater than 5"
       function yearDisplay() {
+        //array yearDisplayArray holds all HTML tables where years needs to be displayed
         yearDisplayArray = ['financialResults','otherExpense','FTEs','programTimeline']
         startYear = parseInt(document.getElementById('startYear').value);
         for (x=0; x<yearDisplayArray.length; x++) {
           for (y=0; y<5; y++) {
+            modelYears[y] = startYear + y;
             document.getElementById(yearDisplayArray[x]+'Year'+y+'Label').innerHTML = startYear + y;
             }
           }
@@ -328,9 +360,15 @@
       displayProgramList = document.getElementById("displayProgram");
 
       function addProgram() {
-        programList.push(programName.value);
-        displayProgram();
-        programDevPhases();
+        if (programName.value === "") {
+          newProgramError = "*Please enter a program name"
+          document.getElementById("newProgramError").innerHTML = newProgramError
+          } else {
+          programList.push(programName.value);
+          displayProgram();
+          programDevPhases();
+          document.getElementById("newProgramError").innerHTML = "";
+          }
       }
       
       function displayProgram() {
@@ -415,14 +453,17 @@
         var discoveryCount = 0;
         for (var x=0, row; row = table.rows[x]; x++) {
           for (var y=0, col; col = row.cells[y]; y++) {
-            selectedPhase = document.querySelector("select").value;
-            if (selectedPhase === "discovery") {
+            selectedPhase = document.querySelectorAll("select");
+            for (var z=0; z<selectedPhase.length; z++) {
+            test = selectedPhase[0].selectedOptions.value;
+            if (test === "Discovery") {
               discoveryCount ++
             };
           }
         }
-        console.log(discoveryCount);
+        console.log(selectedPhase);
       }
+    }
 
 
 //"FTE functions"
@@ -448,5 +489,47 @@
         console.log(FTECost);
       }
 
+//"Other Expenses Functions"
+
+      function addRow(table) {
+        var table = document.getElementById(table);
+        var row = table.insertRow(table.rows.length);
+        for (i=0; i<table.rows[0].cells.length; i++) {
+          if (i === 0) {
+            var div = document.createElement("input"),
+              txt = document.createTextNode(i);
+            div.appendChild(txt);
+            div.type = "text";
+            row.insertCell(i).appendChild(div);
+            } else {
+            var div = document.createElement("input"),
+              txt = document.createTextNode(i);
+            div.appendChild(txt);
+            div.type = "number";
+            div.className = "right";
+            row.insertCell(i).appendChild(div);
+            }
+          }
+       }
+
+      function calculateOtherExpense() {
+        table = document.getElementById("otherExpense");
+        var otherExpense = [];
+        otherExpenseRow = table.rows;
+        for (x = table.rows.length -1 ; x < table.rows.length; x++) {
+          cell = otherExpenseRow[x].cells;
+          for (y = 0; y < cell.length; y++) {
+            otherExpenseItem = document.querySelectorAll("td").value
+            otherExpense.push(otherExpenseItem);
+            console.log(otherExpense);
+          }
+        }
+      }
+
+//"Financing functions
+
+      function yearCheck() {
+
+      }
     </script>
 </html>

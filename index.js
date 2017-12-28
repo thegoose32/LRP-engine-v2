@@ -1,8 +1,34 @@
 const yearOneCash = document.getElementById('startCash');
 const yearStartNode = document.getElementById('startYear');
 const numYears = 5;
+const devPhases = [
+  {
+    id: "discovery",
+    name: "Discovery"
+  },
+  {
+    id: "preclinical",
+    name: "Preclinical"
+  },
+  {
+    id: "phase1",
+    name: "Phase 1"
+  },
+  {
+    id: "phase2",
+    name: "Phase 2"
+  },
+  {
+    id: "phase3",
+    name: "Phase 3"
+  },
+  {
+    id: "na",
+    name: "N/A"
+  }
+];
 
-//"Function needs to be updated if years out is greater than 5"
+
 function yearDisplay() {
   //array yearDisplayArray holds all HTML tables where years needs to be displayed
   const yearDisplayArray = ['financialResults','otherExpense','FTEs','programTimeline']
@@ -25,26 +51,36 @@ function numberWithCommas(x) {
 }
 
 //"Think through how I can make this into a function"
-function developmentPhases() {
-  discoveryCost = document.getElementById('discoveryCost').value;
-  preclinicalCost = document.getElementById('preclinicalCost').value;
-  //"Phase 1 costs //
-  phase1Patients = document.getElementById('phase1Patients').value;
-  phase1PatientCost = document.getElementById('phase1PatientCost').value;
-  phase1Total = phase1Patients * phase1PatientCost
-  document.getElementById('phase1Total').innerHTML = numberWithCommas(phase1Total);
-  //"Phase 2 costs //
-  phase2Patients = document.getElementById('phase2Patients').value;
-  phase2PatientCost = document.getElementById('phase2PatientCost').value;
-  phase2Total = phase2Patients * phase2PatientCost
-  document.getElementById('phase2Total').innerHTML = numberWithCommas(phase2Total);
-  //"Phase 3 costs //
-  phase3Patients = document.getElementById('phase3Patients').value;
-  phase3PatientCost = document.getElementById('phase3PatientCost').value;
-  phase3Total = phase3Patients * phase3PatientCost
-  document.getElementById('phase3Total').innerHTML = numberWithCommas(phase3Total);
+function getPhaseCosts() {
+  let phaseCosts = {};
+
+  phaseCosts['Discovery'] = document.getElementById('discoveryCost').valueAsNumber;
+  phaseCosts['Preclinical'] = document.getElementById('preclinicalCost').valueAsNumber;
+
+  const phase1Patients = document.getElementById('phase1Patients').valueAsNumber;
+  const phase1PatientCost = document.getElementById('phase1PatientCost').valueAsNumber;
+  phaseCosts['Phase 1'] = phase1Patients * phase1PatientCost;
+
+  const phase2Patients = document.getElementById('phase2Patients').valueAsNumber;
+  const phase2PatientCost = document.getElementById('phase2PatientCost').valueAsNumber;
+  phaseCosts['Phase 2'] = phase2Patients * phase2PatientCost;
+
+  const phase3Patients = document.getElementById('phase3Patients').valueAsNumber;
+  const phase3PatientCost = document.getElementById('phase3PatientCost').valueAsNumber;
+  phaseCosts['Phase 3'] = phase3Patients * phase3PatientCost;
+
+  phaseCosts['N/A'] = 0;
+
+  return phaseCosts;
 }
 
+function printClinicalCosts() {
+  const phaseCosts = getPhaseCosts();
+  document.getElementById('phase1Total').innerHTML = numberWithCommas(phaseCosts['Phase 1']);
+  document.getElementById('phase2Total').innerHTML = numberWithCommas(phaseCosts['Phase 2']);
+  document.getElementById('phase3Total').innerHTML = numberWithCommas(phaseCosts['Phase 3']);
+}
+  
 const programName = document.getElementById("newProgram");
 const displayProgramNode = document.getElementById("displayProgram");
 const programTableNode = document.getElementById("programs");
@@ -108,33 +144,6 @@ function createCell(cell, text, style) {
 
 function createDevPhaseCell(cell, style) {
   var div = document.createElement('select');
-  const devPhases = [
-    {
-      id: "discovery",
-      name: "Discovery"
-    },
-    {
-      id: "preclinical",
-      name: "Prelinical"
-    },
-    {
-      id: "phase1",
-      name: "Phase 1"
-    },
-    {
-      id: "phase2",
-      name: "Phase 2"
-    },
-    {
-      id: "phase3",
-      name: "Phase 3"
-    },
-    {
-      id: "na",
-      name: "N/A"
-    }
-  ];
-
   for (var x=0; x<Object.keys(devPhases).length; x++) {
     devPhaseOption = document.createElement('option');
     attribute = document.createAttribute('id');
@@ -148,14 +157,16 @@ function createDevPhaseCell(cell, style) {
 }
 
 function devPhaseCount() {
+  const programList = getProgramList();
   var table = document.getElementById("programTimeline");
-  var discoveryCount = 0;
   var programPhase = table.querySelectorAll("tr:not(.header)");
   for (a=0; a<programPhase.length; a++) {
     var phaseSelected = Array.from(programPhase[a].querySelectorAll("select"));
     var phaseStrings = phaseSelected.map(selectValue);
-    console.log(phaseStrings);
+    programList[a].push(phaseStrings);
   };
+  devPhaseCost(programList);
+  console.log(programList);
 };
 
 function selectValue(selectNode) {
@@ -167,6 +178,24 @@ function selectValue(selectNode) {
   }
   return selectNode.selectedOptions[0].value;
 }
+
+//Match development phase string to development phase costs
+
+function devPhaseCost(programList) {
+  for (let x=0; x<programList.length; x++) {
+    programList[x][2] = programList[x][1].map(devPhaseMatch);
+  }
+}
+
+function devPhaseMatch(phase) {
+  const phaseCosts = getPhaseCosts();
+  if (phaseCosts[phase] !== undefined) {
+    return phaseCosts[phase];
+  } else {
+    throw new Error("Invalid development phase");
+  }
+}
+
 
 //"FTE functions"
 

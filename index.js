@@ -1,25 +1,21 @@
-
-const calculateSimulationButton = document.getElementById('calculate-simulation-button');
 const yearOneCash = document.getElementById('startCash');
-
-//"need to determine global vs local variables. I need model years in other places (checking financings year, etc)"
-var modelYears = [] 
+const yearStartNode = document.getElementById('startYear');
+const numYears = 5;
 
 //"Function needs to be updated if years out is greater than 5"
 function yearDisplay() {
   //array yearDisplayArray holds all HTML tables where years needs to be displayed
-  yearDisplayArray = ['financialResults','otherExpense','FTEs','programTimeline']
-  startYear = parseInt(document.getElementById('startYear').value);
-  for (x=0; x<yearDisplayArray.length; x++) {
-    for (y=0; y<5; y++) {
-      modelYears[y] = startYear + y;
+  const yearDisplayArray = ['financialResults','otherExpense','FTEs','programTimeline']
+  const startYear = parseInt(yearStartNode.value);
+  for (let x=0; x<yearDisplayArray.length; x++) {
+    for (let y=0; y<numYears; y++) {
       document.getElementById(yearDisplayArray[x]+'Year'+y+'Label').innerHTML = startYear + y;
     }
   }
 }
 
 function cashStartDisplay() {
-  number = +document.getElementById("startCash").value;
+  const number = document.getElementById("startCash").value;
   document.getElementById("begCash").innerHTML = numberWithCommas(number);
   document.getElementById("startCash").innerHTML = numberWithCommas(number);
 }
@@ -49,19 +45,25 @@ function developmentPhases() {
   document.getElementById('phase3Total').innerHTML = numberWithCommas(phase3Total);
 }
 
-programList = []
+const programName = document.getElementById("newProgram");
+const displayProgramNode = document.getElementById("displayProgram");
+const programTableNode = document.getElementById("programs");
 
-
-
-programName = document.getElementById("newProgram");
-displayProgramList = document.getElementById("displayProgram");
+/**
+ * Get Program List from the DOM.
+ */
+function getProgramList() {
+  const programList = tableData(programTableNode);
+  // TODO: convert to flat list and remove last row
+  return programList;
+  console.log(programList);
+}
 
 function addProgram() {
   if (programName.value === "") {
     newProgramError = "*Please enter a program name"
     document.getElementById("newProgramError").innerHTML = newProgramError
   } else {
-    programList.push(programName.value);
     displayProgram();
     programDevPhases();
     document.getElementById("newProgramError").innerHTML = "";
@@ -69,17 +71,17 @@ function addProgram() {
 }
 
 function displayProgram() {
+  // Show our output
+  var row = programTableNode.insertRow(-1);
+  var cell = row.insertCell(-1);
+  cell.appendChild(document.createTextNode(programName.value));
+
   // Clear our fields
   programName.value = "";
-
-  // Show our output
-  programTable = document.getElementById("programs");
-  var row = programTable.insertRow(-1);
-  var cell = row.insertCell(-1);
-  cell.appendChild(document.createTextNode(programList[programList.length - 1]));
 }
 
 function programDevPhases() {
+  const programList = getProgramList();
   for (x=programList.length-1; x<programList.length; x++) {
     var table = document.getElementById('programTimeline');
     var row = table.insertRow(table.rows.length);
@@ -131,9 +133,9 @@ function createDevPhaseCell(cell, style) {
       id: "na",
       name: "N/A"
     }
-  ]
+  ];
 
-  for (x=0; x<Object.keys(devPhases).length; x++) {
+  for (var x=0; x<Object.keys(devPhases).length; x++) {
     devPhaseOption = document.createElement('option');
     attribute = document.createAttribute('id');
     devPhaseOption.innerHTML = devPhases[x]['name'];
@@ -212,6 +214,43 @@ function addRow(table) {
   }
 }
 
+/**
+ * 
+ */
+function tableData(tableNode, columnDescriptors) {
+  const rowNodes = tableNode.querySelectorAll('tr');
+  const tableData = [];
+  for (let i = 2; i < rowNodes.length; i++) {
+    let rowNode = rowNodes[i];
+    let rowData = [];
+    let columnNodes = rowNode.querySelectorAll('td');
+    for (let j = 0; j < columnNodes.length; j++) {
+      let value = getCellValue(columnNodes[j]);
+      rowData.push(value);
+    }
+    tableData.push(rowData);
+  }
+  return tableData;
+}
+
+/**
+ * Parse a table cell's value.
+ *
+ * Handles:
+ *
+ * 1. Plain text nodes
+ * 2. <input> tags
+ * 3. <select> tags
+ */
+function getCellValue(cellNode) {
+  if (cellNode.childNodes.length != 1) {
+    throw new Error("We assume there is only one child!");
+  }
+  let child = cellNode.childNodes[0];
+  return child.textContent;
+  }
+
+
 function calculateOtherExpense() {
   table = document.getElementById("otherExpense");
   var otherExpense = [];
@@ -231,3 +270,14 @@ function calculateOtherExpense() {
 function yearCheck() {
 
 }
+
+function allCalculations() {
+  // 1. Grab all information from the DOM
+  const modelYears = [];
+  const startYear = parseInt(yearStartNode.value);
+  for (let y=0; y<numYears; y++) {
+    modelYears[y] = startYear + y;
+  }
+  console.log(modelYears);
+}
+

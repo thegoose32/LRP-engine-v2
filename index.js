@@ -1,5 +1,4 @@
 const yearOneCash = document.getElementById('startCash');
-const yearStartNode = document.getElementById('startYear');
 const numYears = 5;
 const devPhases = [
   {
@@ -31,8 +30,8 @@ const devPhases = [
 
 function yearDisplay() {
   //array yearDisplayArray holds all HTML tables where years needs to be displayed
-  const yearDisplayArray = ['financialResults','otherExpense','FTEs','programTimeline']
-  const startYear = parseInt(yearStartNode.value);
+  const yearDisplayArray = ['financialResults','otherExpense','FTEs','programTimeline','programCosts']
+  const startYear = getStartYear();
   for (let x=0; x<yearDisplayArray.length; x++) {
     for (let y=0; y<numYears; y++) {
       document.getElementById(yearDisplayArray[x]+'Year'+y+'Label').innerHTML = startYear + y;
@@ -46,34 +45,6 @@ function cashStartDisplay() {
   document.getElementById("startCash").innerHTML = numberWithCommas(number);
 }
 
-function numberWithCommas(x) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
-//"Think through how I can make this into a function"
-function getPhaseCosts() {
-  let phaseCosts = {};
-
-  phaseCosts['Discovery'] = document.getElementById('discoveryCost').valueAsNumber;
-  phaseCosts['Preclinical'] = document.getElementById('preclinicalCost').valueAsNumber;
-
-  const phase1Patients = document.getElementById('phase1Patients').valueAsNumber;
-  const phase1PatientCost = document.getElementById('phase1PatientCost').valueAsNumber;
-  phaseCosts['Phase 1'] = phase1Patients * phase1PatientCost;
-
-  const phase2Patients = document.getElementById('phase2Patients').valueAsNumber;
-  const phase2PatientCost = document.getElementById('phase2PatientCost').valueAsNumber;
-  phaseCosts['Phase 2'] = phase2Patients * phase2PatientCost;
-
-  const phase3Patients = document.getElementById('phase3Patients').valueAsNumber;
-  const phase3PatientCost = document.getElementById('phase3PatientCost').valueAsNumber;
-  phaseCosts['Phase 3'] = phase3Patients * phase3PatientCost;
-
-  phaseCosts['N/A'] = 0;
-
-  return phaseCosts;
-}
-
 function printClinicalCosts() {
   const phaseCosts = getPhaseCosts();
   document.getElementById('phase1Total').innerHTML = numberWithCommas(phaseCosts['Phase 1']);
@@ -85,19 +56,9 @@ const programName = document.getElementById("newProgram");
 const displayProgramNode = document.getElementById("displayProgram");
 const programTableNode = document.getElementById("programs");
 
-/**
- * Get Program List from the DOM.
- */
-function getProgramList() {
-  const programList = tableData(programTableNode);
-  // TODO: convert to flat list and remove last row
-  return programList;
-  console.log(programList);
-}
-
 function addProgram() {
   if (programName.value === "") {
-    newProgramError = "*Please enter a program name"
+    const newProgramError = "*Please enter a program name"
     document.getElementById("newProgramError").innerHTML = newProgramError
   } else {
     displayProgram();
@@ -108,8 +69,8 @@ function addProgram() {
 
 function displayProgram() {
   // Show our output
-  var row = programTableNode.insertRow(-1);
-  var cell = row.insertCell(-1);
+  let row = programTableNode.insertRow(-1);
+  let cell = row.insertCell(-1);
   cell.appendChild(document.createTextNode(programName.value));
 
   // Clear our fields
@@ -118,13 +79,14 @@ function displayProgram() {
 
 function programDevPhases() {
   const programList = getProgramList();
-  for (x=programList.length-1; x<programList.length; x++) {
-    var table = document.getElementById('programTimeline');
-    var row = table.insertRow(table.rows.length);
-    for (i=0; i<table.rows[0].cells.length; i++) {
-      if (i===0) {
-        createCell(row.insertCell(i), i, 'row');
-        document.getElementById("program"+x).innerHTML = programList[x];
+  for (let x = programList.length - 1; x<programList.length; x++) {
+    let table = document.getElementById('programTimeline');
+    let row = table.insertRow(table.rows.length);
+    for (let i=0; i<table.rows[0].cells.length; i++) {
+      if (i === 0) {
+        createCell(row.insertCell(i), i, 'row', x, 'programTimeline');
+        let programLabel = programList[x][0];
+        document.getElementById("programTimelineProgram"+x).innerHTML = programLabel;
       } else {
         createDevPhaseCell(row.insertCell(i), 'row');
       }
@@ -132,21 +94,21 @@ function programDevPhases() {
   }
 }
 
-function createCell(cell, text, style) {
-  var div = document.createElement("program"+x); // create DIV element
-  var txt = document.createTextNode(text); // create text node
+function createCell(cell, text, style, programNumber, tableName) {
+  let div = document.createElement('div');   // create DIV element
+  let txt = document.createTextNode(text); // create text node
   div.appendChild(txt);                    // append text node to the DIV
   div.setAttribute('class', style);        // set DIV class attribute
   div.setAttribute('className', style);    // set DIV class attribute for IE (?!)
-  div.setAttribute('id', "program"+x);
+  div.setAttribute('id', tableName + "Program" + programNumber);
   cell.appendChild(div);                   // append DIV to the table cell
 }
 
 function createDevPhaseCell(cell, style) {
-  var div = document.createElement('select');
-  for (var x=0; x<Object.keys(devPhases).length; x++) {
-    devPhaseOption = document.createElement('option');
-    attribute = document.createAttribute('id');
+  const div = document.createElement('select');
+  for (let x=0; x<Object.keys(devPhases).length; x++) {
+    const devPhaseOption = document.createElement('option');
+    const attribute = document.createAttribute('id');
     devPhaseOption.innerHTML = devPhases[x]['name'];
     attribute.value = devPhases[x]['id'];
     div.appendChild(devPhaseOption);
@@ -158,15 +120,15 @@ function createDevPhaseCell(cell, style) {
 
 function devPhaseCount() {
   const programList = getProgramList();
-  var table = document.getElementById("programTimeline");
-  var programPhase = table.querySelectorAll("tr:not(.header)");
+  const table = document.getElementById("programTimeline");
+  const programPhase = table.querySelectorAll("tr:not(.header)");
   for (a=0; a<programPhase.length; a++) {
-    var phaseSelected = Array.from(programPhase[a].querySelectorAll("select"));
-    var phaseStrings = phaseSelected.map(selectValue);
+    const phaseSelected = Array.from(programPhase[a].querySelectorAll("select"));
+    const phaseStrings = phaseSelected.map(selectValue);
     programList[a].push(phaseStrings);
   };
   devPhaseCost(programList);
-  console.log(programList);
+  programCosts(programList);
 };
 
 function selectValue(selectNode) {
@@ -196,67 +158,76 @@ function devPhaseMatch(phase) {
   }
 }
 
+function programCosts(programList) {
+  let table = document.getElementById('programCosts');
+  for (let x = table.rows.length - 1; x < programList.length; x++) {
+    let row = table.insertRow(table.rows.length);
+    row.class = "output";
+    for (let i = 0; i < table.rows[0].cells.length; i++) {
+      if (i === 0) {
+        createCell(row.insertCell(i), i, 'row', x, 'programCosts');
+        document.getElementById("programCostsProgram"+x).innerHTML = programList[x][0];
+      } else {
+        createProgramCostCell(row.insertCell(i), 'row', programList, x, i);
+      }
+    }
+  }
+}
+
+function createProgramCostCell(cell, style, programList, programNumber, yearNumber) {
+  let programCostAmount = programList[programNumber][2][yearNumber - 1];
+  const div = document.createElement('p');
+  div.value = programCostAmount;
+  div.type = "p";
+  div.innerText = programCostAmount;
+  div.class = "output"; 
+  cell.appendChild(div);
+}
+
 
 //"FTE functions"
 
 function FTECost() {
-  var FTECost = {
+  const FTECost = {
     "rd": [],
     "ga": [],
     "total": []
-    }
-  var FTEClass = ["rd", "ga"];
-  for (x=0; x<FTEClass.length; x++) {
-    for (y=0; y<5; y++) {
-      rate = document.getElementById(FTEClass[x]+"FTECost").value;
-      FTECount = document.getElementById(FTEClass[x]+"Year"+y+"FTECount").value;
+  };
+  const FTEClass = ["rd", "ga"];
+  for (let x=0; x<FTEClass.length; x++) {
+    for (let y=0; y<5; y++) {
+      const rate = document.getElementById(FTEClass[x]+"FTECost").value;
+      const FTECount = document.getElementById(FTEClass[x]+"Year"+y+"FTECount").value;
       FTECost[FTEClass[x]][y] = rate * FTECount
     }
   }
-  for (z=0; z<5; z++) {
+  for (let z=0; z<5; z++) {
     FTECost["total"][z] = FTECost["rd"][z] + FTECost["ga"][z];
     document.getElementById("year"+z+"FTECost").innerHTML = numberWithCommas(FTECost["total"][z]);
   } 
-  console.log(FTECost);
 }
 
 //"Other Expenses Functions"
 
 function addRow(table) {
-  var table = document.getElementById(table);
-  var row = table.insertRow(table.rows.length);
-  for (i=0; i<table.rows[0].cells.length; i++) {
-    if (i === 0) {
-      var div = document.createElement("input"),
-        txt = document.createTextNode(i);
-      div.appendChild(txt);
-      div.type = "text";
-      row.insertCell(i).appendChild(div);
-    } else {
-      var div = document.createElement("input"),
-        txt = document.createTextNode(i);
-      div.appendChild(txt);
-      div.type = "number";
-      div.className = "right";
-      row.insertCell(i).appendChild(div);
-    }
+  const table = document.getElementById(table);
+  const row = table.insertRow(table.rows.length);
+  for (let i=0; i<table.rows[0].cells.length; i++) {
+    const div = document.createElement("input");
+    const txt = document.createTextNode(i);
+    div.appendChild(txt);
+    div.type = i === 0 ? 'text' : 'number';
+    row.insertCell(i).appendChild(div);
   }
 }
 
-/**
- * 
- */
 function tableData(tableNode, columnDescriptors) {
   const rowNodes = tableNode.querySelectorAll('tr');
   const tableData = [];
   for (let i = 2; i < rowNodes.length; i++) {
-    let rowNode = rowNodes[i];
-    let rowData = [];
-    let columnNodes = rowNode.querySelectorAll('td');
-    for (let j = 0; j < columnNodes.length; j++) {
-      let value = getCellValue(columnNodes[j]);
-      rowData.push(value);
-    }
+    const rowNode = rowNodes[i];
+    const columnNodes = rowNode.querySelectorAll('td');
+    const rowData = Array.from(columnNodes).map(getCellValue);
     tableData.push(rowData);
   }
   return tableData;
@@ -277,19 +248,18 @@ function getCellValue(cellNode) {
   }
   let child = cellNode.childNodes[0];
   return child.textContent;
-  }
+}
 
 
 function calculateOtherExpense() {
   table = document.getElementById("otherExpense");
-  var otherExpense = [];
+  let otherExpense = [];
   otherExpenseRow = table.rows;
   for (x = table.rows.length -1 ; x < table.rows.length; x++) {
     cell = otherExpenseRow[x].cells;
     for (y = 0; y < cell.length; y++) {
       otherExpenseItem = document.querySelectorAll("td").value
       otherExpense.push(otherExpenseItem);
-      console.log(otherExpense);
     }
   }
 }
@@ -303,10 +273,52 @@ function yearCheck() {
 function allCalculations() {
   // 1. Grab all information from the DOM
   const modelYears = [];
-  const startYear = parseInt(yearStartNode.value);
+  const startYear = getStartYear();
   for (let y=0; y<numYears; y++) {
     modelYears[y] = startYear + y;
   }
-  console.log(modelYears);
+}
+
+
+/// Functions that access data from the DOM
+
+function getPhaseCosts() {
+  let phaseCosts = {};
+
+  phaseCosts['Discovery'] = document.getElementById('discoveryCost').valueAsNumber;
+  phaseCosts['Preclinical'] = document.getElementById('preclinicalCost').valueAsNumber;
+
+  const phase1Patients = document.getElementById('phase1Patients').valueAsNumber;
+  const phase1PatientCost = document.getElementById('phase1PatientCost').valueAsNumber;
+  phaseCosts['Phase 1'] = phase1Patients * phase1PatientCost;
+
+  const phase2Patients = document.getElementById('phase2Patients').valueAsNumber;
+  const phase2PatientCost = document.getElementById('phase2PatientCost').valueAsNumber;
+  phaseCosts['Phase 2'] = phase2Patients * phase2PatientCost;
+
+  const phase3Patients = document.getElementById('phase3Patients').valueAsNumber;
+  const phase3PatientCost = document.getElementById('phase3PatientCost').valueAsNumber;
+  phaseCosts['Phase 3'] = phase3Patients * phase3PatientCost;
+
+  phaseCosts['N/A'] = 0;
+
+  return phaseCosts;
+}
+
+function getProgramList() {
+  const programList = tableData(programTableNode);
+  // TODO: convert to flat list and remove last row
+  return programList;
+}
+
+function getStartYear() {
+  const yearStartNode = document.getElementById('startYear');
+  return parseInt(yearStartNode.value);
+}
+
+/// Utility functions
+
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 

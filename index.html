@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="index.css" media="screen" />
     <title>Pharma LRP</title>
   </head>
-  <body>
+  <body onload="yearDisplay()">
     <hr>
     <h3>
       Company Information
@@ -35,10 +35,10 @@
       </tr>
       <tr>
         <td>Discovery</td>
-        <td> <input class="right" id="discoveryCost" type="number"> </td>
+        <td> <input class="right" id="discoveryCost" type="number" value=0> </td>
       </tr>     <tr>
         <td>Preclinical</td>
-        <td> <input class="right"  id="preclinicalCost" type="number"> </td>
+        <td> <input class="right"  id="preclinicalCost" type="number" value=0> </td>
       </tr>
     </table>
     <br>
@@ -53,19 +53,19 @@
         <td>Phase 1</td>
         <td> <input class="right "id="phase1Patients" type="number"> </td>
         <td> <input class="right "id="phase1PatientCost" type="number"> </td>
-        <td> <p id="phase1Total" class="output"> </td>
+        <td> <p id="phase1Total" class="output" value=0> </td>
       </tr>   
       <tr>
         <td>Phase 2</td>
         <td> <input class="right "id="phase2Patients" type="number"> </td>
         <td> <input class="right "id="phase2PatientCost" type="number"> </td>
-        <td> <p id="phase2Total" class="output"> </td>
+        <td> <p id="phase2Total" class="output" value=0> </td>
       </tr>   
       <tr>
         <td>Phase 3</td>
         <td> <input class="right "id="phase3Patients" type="number"> </td>
         <td> <input class="right "id="phase3PatientCost" type="number"> </td>
-        <td> <p id="phase3Total" class="output"> </td>
+        <td> <p id="phase3Total" class="output" value=0> </td>
       </tr>   
    </table>
     <br>
@@ -102,6 +102,21 @@
     </table>
     <br>
     <button onclick="devPhaseCount()">Submit</button>
+    <hr>
+    <h3>
+      Program Costs
+    </h3>
+    <table id="programCosts">
+      <tr class="header">
+        <th col>Program</th>
+        <th col id="programCostsYear0Label"> </th>
+        <th col id="programCostsYear1Label"> </th>
+        <th col id="programCostsYear2Label"> </th>
+        <th col id="programCostsYear3Label"> </th>
+        <th col id="programCostsYear4Label"> </th> 
+      </tr>
+    </table>
+    <br>
     <hr>
     <h3>
       Employee Expenses

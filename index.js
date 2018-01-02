@@ -30,7 +30,7 @@ const devPhases = [
 
 function yearDisplay() {
   //array yearDisplayArray holds all HTML tables where years needs to be displayed
-  const yearDisplayArray = ['financialResults','otherExpense','FTEs','programTimeline','programCosts']
+  const yearDisplayArray = ['financialResults','otherExpense','FTEs','programTimeline','programCosts','financings']
   const startYear = getStartYear();
   for (let x=0; x<yearDisplayArray.length; x++) {
     for (let y=0; y<numYears; y++) {
@@ -47,9 +47,9 @@ function cashStartDisplay() {
 
 function printClinicalCosts() {
   const phaseCosts = getPhaseCosts();
-  document.getElementById('phase1Total').innerHTML = numberWithCommas(phaseCosts['Phase 1']);
-  document.getElementById('phase2Total').innerHTML = numberWithCommas(phaseCosts['Phase 2']);
-  document.getElementById('phase3Total').innerHTML = numberWithCommas(phaseCosts['Phase 3']);
+  document.getElementById('phase1CostYear').innerHTML = numberWithCommas(phaseCosts['Phase 1']);
+  document.getElementById('phase2CostYear').innerHTML = numberWithCommas(phaseCosts['Phase 2']);
+  document.getElementById('phase3CostYear').innerHTML = numberWithCommas(phaseCosts['Phase 3']);
 }
   
 const programName = document.getElementById("newProgram");
@@ -129,6 +129,7 @@ function devPhaseCount() {
   };
   devPhaseCost(programList);
   programCosts(programList);
+  return getTotalProgramCosts(programList);
 };
 
 function selectValue(selectNode) {
@@ -179,11 +180,26 @@ function createProgramCostCell(cell, style, programList, programNumber, yearNumb
   const div = document.createElement('p');
   div.value = programCostAmount;
   div.type = "p";
-  div.innerText = programCostAmount;
+  div.innerText = numberWithCommas(programCostAmount);
   div.class = "output"; 
   cell.appendChild(div);
 }
 
+function getTotalProgramCosts(programList) {
+  let totalProgramCosts = [];
+  for (let x = 0; x < programList.length; x++) {
+    for (let y = 0; y < numYears; y++) {
+      let amount = programList[x][2][y] 
+      if (x === 0) {
+        totalProgramCosts.push(amount);
+      } else {
+        totalProgramCosts[y] += amount;
+      }
+    }
+  }
+  return totalProgramCosts;
+  console.log(totalProgramCosts);
+}
 
 //"FTE functions"
 
@@ -191,8 +207,8 @@ function FTECost() {
   const FTECost = {
     "rd": [],
     "ga": [],
-    "total": []
   };
+  let FTEExpense = [];
   const FTEClass = ["rd", "ga"];
   for (let x=0; x<FTEClass.length; x++) {
     for (let y=0; y<5; y++) {
@@ -202,15 +218,15 @@ function FTECost() {
     }
   }
   for (let z=0; z<5; z++) {
-    FTECost["total"][z] = FTECost["rd"][z] + FTECost["ga"][z];
-    document.getElementById("year"+z+"FTECost").innerHTML = numberWithCommas(FTECost["total"][z]);
-  } 
+    FTEExpense[z] = FTECost["rd"][z] + FTECost["ga"][z];
+  }
+  return FTEExpense;
 }
 
 //"Other Expenses Functions"
 
-function addRow(table) {
-  const table = document.getElementById(table);
+function addRow(tableName) {
+  const table = document.getElementById(tableName);
   const row = table.insertRow(table.rows.length);
   for (let i=0; i<table.rows[0].cells.length; i++) {
     const div = document.createElement("input");
@@ -251,23 +267,50 @@ function getCellValue(cellNode) {
 }
 
 
-function calculateOtherExpense() {
+function getOtherExpense() {
   table = document.getElementById("otherExpense");
   let otherExpense = [];
-  otherExpenseRow = table.rows;
-  for (x = table.rows.length -1 ; x < table.rows.length; x++) {
+  otherExpenseRow = table.querySelectorAll("tr:not(.header)");
+  for (x = 0; x < otherExpenseRow.length; x++) {
     cell = otherExpenseRow[x].cells;
-    for (y = 0; y < cell.length; y++) {
-      otherExpenseItem = document.querySelectorAll("td").value
-      otherExpense.push(otherExpenseItem);
+    for (y = 1; y < cell.length; y++) {
+      otherExpenseItem = cell[y]
+      otherExpenseInput = otherExpenseItem.querySelectorAll("input")
+      otherExpenseValue = otherExpenseInput[0].valueAsNumber;
+      otherExpenseValue = +otherExpenseValue || 0;
+      if (x === 0) {
+        otherExpense.push(otherExpenseValue);
+      } else {
+        otherExpense[y-1] += otherExpenseValue;
+      }
     }
+  return otherExpense;
+  console.log(otherExpense);
   }
 }
 
 //"Financing functions
 
-function yearCheck() {
-
+function getFinancings() {
+  table = document.getElementById("financings");
+  let financings = [];
+  financingsRow = table.querySelectorAll("tr:not(.header)");
+  for (x = 0; x < financingsRow.length; x++) {
+    cell = financingsRow[x].cells;
+    for (y = 1; y < cell.length; y++) {
+      financingsItem = cell[y]
+      financingsInput = financingsItem.querySelectorAll("input")
+      financingsValue = financingsInput[0].valueAsNumber;
+      financingsValue = +financingsValue || 0;
+      if (x === 0) {
+        financings.push(financingsValue);
+      } else {
+        financings[y-1] += financingsValue;
+      }
+    }
+  return financings;
+  console.log(financings);
+  }
 }
 
 function allCalculations() {
@@ -277,6 +320,38 @@ function allCalculations() {
   for (let y=0; y<numYears; y++) {
     modelYears[y] = startYear + y;
   }
+}
+
+function getEndCash() {
+  let programExpense = devPhaseCount();
+  let FTEExpense = FTECost();
+  let otherExpense = getOtherExpense();
+  let financings = getFinancings();
+  let begCash = [yearOneCash.valueAsNumber];
+  let endCash = [];
+
+  for (let x = 0; x < numYears; x++) {
+    if (x === 0) {
+      endCash[x] = begCash[0] + financings[x] - programExpense[x] - FTEExpense[x] - otherExpense[x];
+    } else {
+      begCash[x] = endCash[x - 1];
+      endCash[x] = begCash[x] + financings[x] - programExpense[x] - FTEExpense[x] - otherExpense[x];
+    }
+  }
+  
+  financialResults = [[],[],[],[],[],[]];
+
+  for (let y = 0; y < numYears; y++) {
+    financialResults[0].push(begCash[y]);
+    financialResults[1].push(financings[y]);
+    financialResults[2].push(programExpense[y]);
+    financialResults[3].push(FTEExpense[y]);
+    financialResults[4].push(otherExpense[y]);
+    financialResults[5].push(endCash[y]);
+  }
+
+  console.log(endCash);
+  console.log(financialResults);
 }
 
 
@@ -290,15 +365,18 @@ function getPhaseCosts() {
 
   const phase1Patients = document.getElementById('phase1Patients').valueAsNumber;
   const phase1PatientCost = document.getElementById('phase1PatientCost').valueAsNumber;
-  phaseCosts['Phase 1'] = phase1Patients * phase1PatientCost;
+  const phase1Years = document.getElementById('phase1Years').valueAsNumber;
+  phaseCosts['Phase 1'] = (phase1Patients * phase1PatientCost) / phase1Years;
 
   const phase2Patients = document.getElementById('phase2Patients').valueAsNumber;
   const phase2PatientCost = document.getElementById('phase2PatientCost').valueAsNumber;
-  phaseCosts['Phase 2'] = phase2Patients * phase2PatientCost;
+  const phase2Years = document.getElementById('phase2Years').valueAsNumber;
+  phaseCosts['Phase 2'] = (phase2Patients * phase2PatientCost) / phase2Years;
 
   const phase3Patients = document.getElementById('phase3Patients').valueAsNumber;
   const phase3PatientCost = document.getElementById('phase3PatientCost').valueAsNumber;
-  phaseCosts['Phase 3'] = phase3Patients * phase3PatientCost;
+  const phase3Years = document.getElementById('phase3Years').valueAsNumber;
+  phaseCosts['Phase 3'] = (phase3Patients * phase3PatientCost) / phase3Years;
 
   phaseCosts['N/A'] = 0;
 

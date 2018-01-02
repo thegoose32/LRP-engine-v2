@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="index.css" media="screen" />
     <title>Pharma LRP</title>
   </head>
-  <body onload="yearDisplay()">
+  <body>
     <hr>
     <h3>
       Company Information
@@ -48,24 +48,32 @@
         <th col>Patients</th>
         <th col>Cost / patient</th>
         <th col>Total Trial Cost</th>
+        <th col>Default Years</th>
+        <th col>Trial Cost / year</th>
       </tr>
       <tr>
         <td>Phase 1</td>
         <td> <input class="right "id="phase1Patients" type="number"> </td>
         <td> <input class="right "id="phase1PatientCost" type="number"> </td>
-        <td> <p id="phase1Total" class="output" value=0> </td>
+        <td> <p id="phase1Total" class="output"</td>
+        <td> <input class="right" id="phase1Years" type="number"></td>
+        <td> <p id="phase1CostYear" class="output" value=0></td>
       </tr>   
       <tr>
         <td>Phase 2</td>
         <td> <input class="right "id="phase2Patients" type="number"> </td>
         <td> <input class="right "id="phase2PatientCost" type="number"> </td>
         <td> <p id="phase2Total" class="output" value=0> </td>
+        <td> <input class="right" id="phase2Years" type="number"></td>
+        <td> <p id="phase2CostYear" class="output" value=0></td>
       </tr>   
       <tr>
         <td>Phase 3</td>
         <td> <input class="right "id="phase3Patients" type="number"> </td>
         <td> <input class="right "id="phase3PatientCost" type="number"> </td>
-        <td> <p id="phase3Total" class="output" value=0> </td>
+        <td> <p id="phase3Total" class="output"> </td>
+        <td> <input class="right" id="phase3Years" type="number"></td>
+        <td> <p id="phase3CostYear" class="output" value=0></td>
       </tr>   
    </table>
     <br>
@@ -151,10 +159,6 @@
     </tr>
     </table>
     <br>
-    <p>Assumed annual increase (%)</p>
-    <br>
-    <input type="number" id="FTECostIncrease">
-    <br>
     <button onclick="FTECost()">Submit</button>
     <br>
     <hr>
@@ -162,44 +166,53 @@
       Other Expenses
     </h3>
     <table id="otherExpense">
-      <tr>
+      <tr class="header">
         <th col>Item</th>
-        <th id="otherExpenseYear0Label"> </th>
-        <th col id="otherExpenseYear1Label" class="otherExpense"> </th>
-        <th col id="otherExpenseYear2Label" class="otherExpense"> </th>
-        <th col id="otherExpenseYear3Label" class="otherExpense"> </th>
-        <th col id="otherExpenseYear4Label" class="otherExpense"> </th>
+        <th id="otherExpenseYear0Label"></th>
+        <th id="otherExpenseYear1Label"></th>
+        <th id="otherExpenseYear2Label"></th>
+        <th id="otherExpenseYear3Label"></th>
+        <th id="otherExpenseYear4Label"></th>
       </tr>
       <tr>
-        <td> <input type="text" placeholder="e.g. CapEx"></td>
-        <td> <input type="number"> </td>
-        <td> <input type="number"> </td>
-        <td> <input type="number"> </td>
-        <td> <input type="number"> </td>
-        <td> <input type="number"> </td>
+        <td><input type="text" placeholder="e.g. CapEx"></td>
+        <td><input type="number"></td>
+        <td><input type="number"></td>
+        <td><input type="number"></td>
+        <td><input type="number"></td>
+        <td><input type="number"></td>
       </tr>
     </table>
     <br>
     <button onclick="addRow('otherExpense')">Add</button>
+    <button onclick="getOtherExpense()">Submit</button>
     <br>
     <hr>
     <h3>
       Financings
     </h3>
     <table id="financings">
-      <tr>
-        <th>Name</th>
-        <th>Amount</th>
-        <th>Period</th>
+      <tr class="header">
+        <th col>Item</th>
+        <th id="financingsYear0Label"></th>
+        <th id="financingsYear1Label"></th>
+        <th id="financingsYear2Label"></th>
+        <th id="financingsYear3Label"></th>
+        <th id="financingsYear4Label"></th>
       </tr>
       <tr>
-        <td> <input type="text"> </td>
-        <td> <input type="number" class="right"> </td>
-        <td> <input type="number" class="right"> </td>
+        <td><input type="text" placeholder="e.g. Series A"></td>
+        <td><input type="number"></td>
+        <td><input type="number"></td>
+        <td><input type="number"></td>
+        <td><input type="number"></td>
+        <td><input type="number"></td>
       </tr>
     </table>
     <br>
     <button onclick="addRow('financings')">Add</button>
+    <button onclick="getFinancings()">Submit</button>
+    <br>
     <hr>
     <h3>
       Financial Results
@@ -216,50 +229,42 @@
       <tr>
         <td> Beginning Cash </td>
         <td> <p id="begCash" type="number" class="output"> </td>
-        <td> <p id="begCashYear2" type="number" class="output"</td>
-        <td> <p id="begCashYear3" type="number" class="output"</td>
-        <td> <p id="begCashYear4" type="number" class="output"</td>
-        <td> <p id="begCashYear5" type="number" class="output"</td>
+        <td> <p type="number" class="output"</td>
+        <td> <p type="number" class="output"</td>
+        <td> <p type="number" class="output"</td>
+        <td> <p type="number" class="output"</td>
       </tr>
       <tr>
-        <td> Revenue </td>
-        <td> <input id="yearOneRev" type="number" class="right"></td>
-        <td> <input id="yearTwoRev" type="number" class="right"</td>
-        <td> <input id="yearThreeRev" type="number" class="right"></td>
-        <td> <input id="yearFourRev" type="number" class="right"</td>
-        <td> <input id="yearFiveRev" type="number" class="right"></td>
+        <td> (+) Finacings </td>
+        <td> <p type="number" class="right"></td>
+        <td> <p type="number" class="right"</td>
+        <td> <p type="number" class="right"></td>
+        <td> <p type="number" class="right"</td>
+        <td> <p type="number" class="right"></td>
+      </tr>
+     <tr>
+        <td> (-) Program Expense </td>
+        <td> <p type="number" class="right"></td>
+        <td> <p type="number" class="right"></td>
+        <td> <p type="number" class="right"></td>
+        <td> <p type="number" class="right"></td>
+        <td> <p type="number" class="right"></td>
       </tr>
       <tr>
-        <td> Expenses: </td>
-        <td> </td>
-        <td> </td>
-        <td> </td>
-        <td> </td>
-        <td> </td>
-      </tr>
-      <tr>
-        <td> Program Expense </td>
-        <td> </td>
-        <td> </td>
-        <td> </td>
-        <td> </td>
-        <td> </td>
-      </tr>
-      <tr>
-        <td> Headcount Expense </td>
-        <td> <p id="year0FTECost" class="output"></td>
-        <td> <p id="year1FTECost" class="output"></td>
-        <td> <p id="year2FTECost" class="output"></td>
-        <td> <p id="year3FTECost" class="output"></td>
-        <td> <p id="year4FTECost" class="output"></td>
+        <td> (-) Headcount Expense </td>
+        <td> <p type="number" class="right"></td>
+        <td> <p type="number" class="right"></td>
+        <td> <p type="number" class="right"></td>
+        <td> <p type="number" class="right"></td>
+        <td> <p type="number" class="right"></td>
      </tr>
       <tr>
-        <td> Other Expense </td>
-        <td> </td>
-        <td> </td>
-        <td> </td>
-        <td> </td>
-        <td> </td>
+        <td> (-) Other Expense </td>
+        <td> <p> </td>
+        <td> <p> </td>
+        <td> <p> </td>
+        <td> <p> </td>
+        <td> <p> </td>
       </tr>
       <tr>
         <td> Ending Cash </td>
@@ -271,7 +276,7 @@
       </tr>
     </table>
     <br>
-    <button id="calculate-simulation-button" type="button">Calculate</button>
+    <button id="calculate-simulation-button" type="button" onclick="getEndCash()">Calculate</button>
     <br>
 
     <script src="index.js"></script>

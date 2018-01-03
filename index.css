@@ -9,9 +9,14 @@ th {
   background: Gainsboro;
 }
 
+th.data {
+  width: 120%%;
+}
+
 tr {
   white-space:nowrap;
   padding: 0;
+  border-collapse: collapse;
 }
 
 input {
@@ -31,6 +36,14 @@ p.output {
   padding: 0;
   border-collapse: collapse;
   margin: 0;
+}
+
+p.rowName {
+  text-align: left;
+  padding: 0;
+  border-collapse: collapse;
+  margin: 0;
+  font-style: bold;
 }
 
 input[type=number]::-webkit-inner-spin-button, 

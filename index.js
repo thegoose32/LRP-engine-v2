@@ -84,22 +84,21 @@ function programDevPhases() {
     let row = table.insertRow(table.rows.length);
     for (let i=0; i<table.rows[0].cells.length; i++) {
       if (i === 0) {
-        createCell(row.insertCell(i), i, 'row', x, 'programTimeline');
+        createCell(row.insertCell(i), i, 'rowName', x, 'programTimeline');
         let programLabel = programList[x][0];
         document.getElementById("programTimelineProgram"+x).innerHTML = programLabel;
       } else {
-        createDevPhaseCell(row.insertCell(i), 'row');
+        createDevPhaseCell(row.insertCell(i), 'output');
       }
     }
   }
 }
 
 function createCell(cell, text, style, programNumber, tableName) {
-  let div = document.createElement('div');   // create DIV element
+  let div = document.createElement('p');   // create DIV element
   let txt = document.createTextNode(text); // create text node
   div.appendChild(txt);                    // append text node to the DIV
   div.setAttribute('class', style);        // set DIV class attribute
-  div.setAttribute('className', style);    // set DIV class attribute for IE (?!)
   div.setAttribute('id', tableName + "Program" + programNumber);
   cell.appendChild(div);                   // append DIV to the table cell
 }
@@ -166,10 +165,10 @@ function programCosts(programList) {
     row.class = "output";
     for (let i = 0; i < table.rows[0].cells.length; i++) {
       if (i === 0) {
-        createCell(row.insertCell(i), i, 'row', x, 'programCosts');
+        createCell(row.insertCell(i), i, 'rowName', x, 'programCosts');
         document.getElementById("programCostsProgram"+x).innerHTML = programList[x][0];
       } else {
-        createProgramCostCell(row.insertCell(i), 'row', programList, x, i);
+        createProgramCostCell(row.insertCell(i), 'output', programList, x, i);
       }
     }
   }
@@ -181,7 +180,7 @@ function createProgramCostCell(cell, style, programList, programNumber, yearNumb
   div.value = programCostAmount;
   div.type = "p";
   div.innerText = numberWithCommas(programCostAmount);
-  div.class = "output"; 
+  div.setAttribute('class', style);
   cell.appendChild(div);
 }
 
@@ -339,7 +338,7 @@ function getEndCash() {
     }
   }
   
-  financialResults = [[],[],[],[],[],[]];
+  let financialResults = [[],[],[],[],[],[]];
 
   for (let y = 0; y < numYears; y++) {
     financialResults[0].push(begCash[y]);
@@ -349,8 +348,18 @@ function getEndCash() {
     financialResults[4].push(otherExpense[y]);
     financialResults[5].push(endCash[y]);
   }
-
-  console.log(endCash);
+  
+  let table = document.getElementById("financialResults");
+  let row = Array.from(table.querySelectorAll("tr:not(.header)"));
+  for (let z = 0; z < row.length; z++) {
+    for (let a = 0; a < numYears; a++) {
+      let cell = row[z].querySelectorAll("p");
+      let content = numberWithCommas(financialResults[z][a])
+      cell[a].textContent = content;
+      cell[a].class = "output";
+    };
+  };
+ 
   console.log(financialResults);
 }
 

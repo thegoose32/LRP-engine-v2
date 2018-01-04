@@ -158,17 +158,35 @@ function devPhaseMatch(phase) {
   }
 }
 
+//Need to change line 164 to rerun the numbers if the timeline selections change
 function programCosts(programList) {
   let table = document.getElementById('programCosts');
-  for (let x = table.rows.length - 1; x < programList.length; x++) {
-    let row = table.insertRow(table.rows.length);
-    row.class = "output";
-    for (let i = 0; i < table.rows[0].cells.length; i++) {
-      if (i === 0) {
-        createCell(row.insertCell(i), i, 'rowName', x, 'programCosts');
-        document.getElementById("programCostsProgram"+x).innerHTML = programList[x][0];
-      } else {
-        createProgramCostCell(row.insertCell(i), 'output', programList, x, i);
+  let programCostsPrinted = table.rows.length - 1;
+  if (programCostsPrinted === programList.length) {
+    for (let x = 0; x < programCostsPrinted; x++) {
+      let row = Array.from(table.querySelectorAll("tr:not(.header)"));
+      for (let i = 0; i < 6; i++) {
+        if (i === 0) {
+          document.getElementById("programCostsProgram"+x).innerHTML = programList[x][0];
+        } else {
+        let cell = row[x].querySelectorAll("p");
+        let content = numberWithCommas(programList[x][2][i - 1])
+        cell[i].textContent = content;
+        cell[i].class = "output";
+        }
+      }
+    }
+  } else {
+    for (let x = table.rows.length - 1; x < programList.length; x++) {
+      let row = table.insertRow(table.rows.length);
+      row.class = "output";
+      for (let i = 0; i < table.rows[0].cells.length; i++) {
+        if (i === 0) {
+          createCell(row.insertCell(i), i, 'rowName', x, 'programCosts');
+          document.getElementById("programCostsProgram"+x).innerHTML = programList[x][0];
+        } else {
+          createProgramCostCell(row.insertCell(i), 'output', programList, x, i);
+        }
       }
     }
   }

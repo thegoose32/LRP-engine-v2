@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>LRP Engine</title>
+ </head>
+  <body>
+    <div id="root"></div>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    <script type="text/babel">
+
+      const modelYears = 5;
+
+      class ModelSetup extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            startYear: 2018,
+            startCash: 0
+            };
+
+          this.handleBegCash = this.handleBegCash.bind(this);
+          this.handleBegYear = this.handleBegYear.bind(this);
+          }
+
+        handleBegYear(event) {
+          this.setState({startYear: Number(event.target.value)})
+       }
+
+        handleBegCash(event) {
+          this.setState({startCash: Number(event.target.value)})
+        }
+
+        render() {
+          return (
+            <div>
+              <hr></hr>
+              <h3>Model Setup</h3>
+              <form onSubmit={this.yearTwo}>
+                <label>
+                  Beginning Cash
+                  <input type="number" value={this.state.startCash} onChange={this.handleBegCash} />
+                </label>
+                <br></br>
+                <label>
+                  Beginning Year
+                  <input type="number" value={this.state.startYear} onChange={this.handleBegYear} />
+                </label>
+              </form>
+              <button onClick={this.yearTwo}>Submit</button>
+              <Rollforward 
+                startYear={this.state.startYear}
+                startCash={this.state.startCash}
+              />
+              <Timeline
+                startYear={this.state.startYear}
+              />
+            </div> 
+          )
+        }
+      }
+    
+
+    class Rollforward extends React.Component {
+      render() {
+        return (
+          <div>
+            <hr></hr>
+            <h3>Cash Rollforward</h3>
+            <table>
+              <tbody>
+                <YearsTableHeader
+                  startYear={this.props.startYear}
+                />
+                <tr>
+                  <td>Beginning Cash</td>
+                  <td>{numberWithCommas(this.props.startCash)}</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )
+      }
+    }
+
+    class Timeline extends React.Component {
+      render() {
+        return (
+          <div>
+            <hr></hr>
+            <h3>Program Timeline</h3>
+            <table>
+              <tbody>
+                <YearsTableHeader
+                  startYear={this.props.startYear}
+                />
+             </tbody>
+            </table>
+          </div>
+        )
+      }
+    }
+
+    function YearsTableHeader(props) {
+      return (
+        <tr>
+          <th></th>
+          <th>{calculateYears(props.startYear,0)}</th>
+          <th>{calculateYears(props.startYear,1)}</th>
+          <th>{calculateYears(props.startYear,2)}</th>
+          <th>{calculateYears(props.startYear,3)}</th>
+          <th>{calculateYears(props.startYear,4)}</th>
+        </tr>
+      )
+    }
+
+    function calculateYears(startYear,currentYear) {
+      let years = Array(5);
+      for (let x = 0; x < modelYears; x++) {
+        if (x === 0) {
+          years[x] = Number(startYear)
+        } else {
+          years[x] = Number(startYear+x)
+        }
+      }
+      return years[currentYear]
+    }
+ 
+      ReactDOM.render(
+        <ModelSetup />,
+        document.getElementById('root')
+      );
+   
+    function numberWithCommas(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    </script>
+   
+    
+    
+    <!--
+      Note: this page is a great way to try React but it's not suitable for production.
+      It slowly compiles JSX with Babel in the browser and uses a large development build of React.
+
+      To set up a production-ready React build environment, follow these instructions:
+      * https://reactjs.org/docs/add-react-to-a-new-app.html
+      * https://reactjs.org/docs/add-react-to-an-existing-app.html
+
+      You can also use React without JSX, in which case you can remove Babel:
+      * https://reactjs.org/docs/react-without-jsx.html
+      * https://reactjs.org/docs/cdn-links.html
+    -->
+  </body>
+</html>

@@ -18,11 +18,14 @@
           super(props);
           this.state = {
             startYear: 2018,
-            startCash: 0
+            startCash: 0,
+            programs: ["Program 1"]
             };
 
           this.handleBegCash = this.handleBegCash.bind(this);
           this.handleBegYear = this.handleBegYear.bind(this);
+          this.addProgram = this.addProgram.bind(this);
+          this.programNameChange = this.programNameChange.bind(this);
           }
 
         handleBegYear(event) {
@@ -31,6 +34,17 @@
 
         handleBegCash(event) {
           this.setState({startCash: Number(event.target.value)})
+        }
+
+        addProgram(program) {
+          let arr = this.state.programs.slice();
+          arr.push(program);
+          this.setState({programs: arr});
+        }
+
+        programNameChange(event) {
+          let programName = this.state.programs[this.state.programs.length - 1];
+          this.setState({programs: event.target.value});
         }
 
         render() {
@@ -54,8 +68,13 @@
                 startYear={this.state.startYear}
                 startCash={this.state.startCash}
               />
-              <Timeline
+              <Headcount
                 startYear={this.state.startYear}
+              />
+              <Programs
+                addProgram={this.addProgram}
+                programNameChange={this.programNameChange}
+                programs={this.state.programs}
               />
             </div> 
           )
@@ -71,9 +90,11 @@
             <h3>Cash Rollforward</h3>
             <table>
               <tbody>
+                <tr>
                 <YearsTableHeader
                   startYear={this.props.startYear}
                 />
+                </tr>
                 <tr>
                   <td>Beginning Cash</td>
                   <td>{numberWithCommas(this.props.startCash)}</td>
@@ -89,17 +110,69 @@
       }
     }
 
-    class Timeline extends React.Component {
+    class Programs extends React.Component {
+      constructor(props) {
+        super(props);
+        this.addProgram = this.addProgram.bind(this);
+        this.programNameChange = this.programNameChange.bind(this);
+      }
+
+      addProgram(e) {
+        this.props.addProgram(e.target.value);
+      }
+
+      programNameChange(e) {
+        this.props.programNameChange(e.target.value)
+      }
+
+      render() {
+        const programs = this.props.programs;
+        return (
+          <div>
+            <hr></hr>
+            <h3>Program Portfolio</h3>
+            <table>
+              <tbody>
+                <tr>
+                  <th>Name</th>
+                </tr>
+                <tr>
+                  <th>
+                    <form onSubmit={this.addProgram}>
+                      <input
+                        type="text" 
+                        value={programs[programs.length - 1]}
+                        onChange={this.programNameChange}
+                      />
+                      <input
+                        type="submit"
+                        value="Add"
+                      />
+                    </form>
+                  </th>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )
+      }
+    }
+
+    class Headcount extends React.Component {
       render() {
         return (
           <div>
             <hr></hr>
-            <h3>Program Timeline</h3>
+            <h3>Headcount</h3>
             <table>
               <tbody>
-                <YearsTableHeader
-                  startYear={this.props.startYear}
-                />
+                <tr>
+                  <th>Department</th>
+                  <th>FTE Rate</th>
+                  <YearsTableHeader
+                    startYear={this.props.startYear}
+                  />
+                </tr>
              </tbody>
             </table>
           </div>
@@ -107,16 +180,17 @@
       }
     }
 
+
     function YearsTableHeader(props) {
       return (
-        <tr>
+        <div>
           <th></th>
           <th>{calculateYears(props.startYear,0)}</th>
           <th>{calculateYears(props.startYear,1)}</th>
           <th>{calculateYears(props.startYear,2)}</th>
           <th>{calculateYears(props.startYear,3)}</th>
           <th>{calculateYears(props.startYear,4)}</th>
-        </tr>
+        </div>
       )
     }
 
